@@ -39,10 +39,18 @@ CREATE TABLE Reservation (
 ) ;
 
 create table user (
-	id varchar(20) not null primary key,
-	password varchar(16) not null,
-	name varchar(16) not null,
+	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id 			varchar(20) not null UNIQUE,
+	password 	varchar(16) not null,
+	name 		varchar(16) not null,
 	phoneNumber varchar(11) not null
 );
+
+-- DATABASE와 USER테이블의 charset=utf8 로 설정합니다. 한글깨짐을 방지하기 위함.
+ALTER DATABASE booksys DEFAULT CHARACTER SET utf8;
+ALTER TABLE user CONVERT TO CHARACTER SET utf8;
+-- SELECT schema_name, default_character_set_name FROM information_schema.schemata;
+-- SELECT CCSA.character_set_name FROM information_schema.`TABLES` T, information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA WHERE CCSA.collation_name = T.table_collation AND T.table_schema = "booksys" AND T.table_name = "user";
+
 
 

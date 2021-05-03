@@ -88,24 +88,29 @@ public class MainController {
 	}
 
 	@GetMapping("/register.do")
-	public String register(@RequestParam(value = "id") String id, @RequestParam(value = "password") String password,
-			@RequestParam(value = "name") String name, @RequestParam(value = "phoneNumber") String phoneNumber) {
+	public String register(@RequestParam(value = "id") String id, 
+			@RequestParam(value = "password") String password,
+			@RequestParam(value = "name") String name,
+			@RequestParam(value = "phoneNumber") String phoneNumber) {
+		
+		String result = "done";
 		try {
-			Statement stmt = Database.getConnection().createStatement();
-			int updateCount = stmt.executeUpdate("INSERT INTO user (id, password, name, phoneNumber)" + "VALUES ('" + id
-					+ "', '" + password + "', '" + name + "', '" + phoneNumber + "')");
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			Statement stmt
+			  = Database.getConnection().createStatement() ;
+			int updateCount = stmt.executeUpdate(
+					"INSERT INTO user (id, password, name, phoneNumber)" +
+					       "VALUES ('" + id + "', '" + password + "', '" + name + "', '" + phoneNumber + "')");
+			stmt.close() ;
+		}catch (SQLException e) {
+			e.printStackTrace() ;
+			result = "fail";
 		}
-
-		// TODO
-		/*
-		 * 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함. 아래는 예시 코드
-		 * http://localhost:8080/register.do?id=test&password=1234&name=himan&
-		 * phoneNumber=01012341234
+		
+		//TODO 
+		/* 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함.
+		 * 아래는 예시 코드
+		 * http://localhost:8080/register.do?id=test&password=1234&name=bb&phoneNumber=01012341234
 		 */
-		return "done";
-	}
-
+		return result;
+	}	
 }
