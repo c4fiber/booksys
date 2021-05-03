@@ -56,9 +56,14 @@ public class MainController {
 		}catch (SQLException e) {
 			e.printStackTrace() ;
 		}
-
 		
+		//TODO 
+		/* 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함.
+		 * 아래는 예시 코드
+		 * http://localhost:8080/register.do?id=test&password=1234&name=himan&phoneNumber=01012341234
+		 */
 		return "done";
 	}
+
 	
 }
