@@ -6,38 +6,40 @@
  * McGraw-Hill (2004)
  */
 
-package com.domain ;
+package com.domain;
 
-public class User
-{
-  private String id;
-  private String password;
-  private String name ;
-  private String phoneNumber ;
+public class User {
+	private int oid;
+	private String id;
+	private String password;
+	private String name;
+	private String phoneNumber;
 
-  public User(String i, String pw,String n, String p)
-  {
-	id = i;
-	password = pw;
-    name = n ;
-    phoneNumber = p ;
-  }
+	public User(int aOid, String aID, String aPassword, String aName, String aPhoneNumber) {
+		oid = aOid;
+		id = aID;
+		password = aPassword;
+		name = aName;
+		phoneNumber = aPhoneNumber;
+	}
 
-  public String getName()
-  {
-    return name ;
-  }
+	public String get() {
+		return name;
+	}
 
-  public String getPhoneNumber()
-  {
-    return phoneNumber ;
-  }
-  public String getId()
-  {
-    return id ;
-  }
-  public String getPassword()
-  {
-    return password ;
-  }
+	public String getName() {
+		return name;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
 }
