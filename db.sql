@@ -38,4 +38,11 @@ CREATE TABLE Reservation (
        arrivalTime  TIME
 ) ;
 
+create table user (
+	id varchar(20) not null primary key,
+	password varchar(16) not null,
+	name varchar(16) not null,
+	phoneNumber varchar(11) not null
+);
+
 
