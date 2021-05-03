@@ -86,7 +86,22 @@ public class MainController {
 		}
 		return c;
 	}
-
+/*
+ * dfdsfesfse
+ * f
+ * sef
+ * se
+ * fse
+ * f
+ * sef
+ * sf
+ * s
+ * fs
+ * f
+ * e
+ * sf
+ * se
+ */
 	@GetMapping("/register.do")
 	public String register(@RequestParam(value = "id") String id, 
 			@RequestParam(value = "password") String password,
