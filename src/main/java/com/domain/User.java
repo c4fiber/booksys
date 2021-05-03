@@ -23,6 +23,9 @@ public class User {
 		phoneNumber = aPhoneNumber;
 	}
 
+	public int getOid() {
+		return oid;
+	}
 	public String get() {
 		return name;
 	}

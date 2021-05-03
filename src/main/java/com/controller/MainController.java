@@ -43,6 +43,7 @@ public class MainController {
 		// 1. id키가 기본키이므로 id키로 Select문을 사용해 User객체를 받아옴
 		User findUser = getUser("SELECT * FROM user WHERE id = '" + id + "'");
 		// 2. 없으면 false리턴
+		if (findUser == null)
 			return false;
 		else {
 			// 3.id와 패스워드 같으면
