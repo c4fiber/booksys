@@ -102,7 +102,7 @@ public class MainController {
  * sf
  * se
  */
-	@GetMapping("/register.do")
+	@GetMapping("/register.do") // fefefef
 	public String register(@RequestParam(value = "id") String id, 
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "name") String name,
