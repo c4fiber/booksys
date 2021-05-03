@@ -45,4 +45,7 @@ create table user (
 	phoneNumber varchar(11) not null
 );
 
+-- DATABASE charset=utf8 로 설정합니다. 한글깨짐을 방지하기 위함.
+ALTER DATABASE booksys DEFAULT CHARACTER SET utf8;
+
 
