@@ -76,11 +76,11 @@ public class MainController {
 			Statement stmt = Database.getInstance().getConnection().createStatement();
 			ResultSet rset = stmt.executeQuery(sql);
 			while (rset.next()) {
-				int oid = rset.getInt(0);
-				String id = rset.getString(1);
-				String password = rset.getString(2);
-				String name = rset.getString(3);
-				String phoneNumber = rset.getString(4);
+				int oid = rset.getInt(1);
+				String id = rset.getString(2);
+				String password = rset.getString(3);
+				String name = rset.getString(4);
+				String phoneNumber = rset.getString(5);
 				c = new User(oid, id, password, name, phoneNumber);
 			}
 			rset.close();
@@ -102,27 +102,18 @@ public class MainController {
 		String result = "done";
 		try {
 			Statement stmt
-			  = Database.getConnection().createStatement() ;
+			  = Database.getConnection().createStatement();
 	
 			//같은 날인지 확인
-			ResultSet dateCheckSet = stmt.executeQuery("SELECT date from reservation WHERE date="+"'" +date+ "'");
-			if(dateCheckSet!=null)
+			ResultSet checkSet = stmt.executeQuery("SELECT oid from reservation WHERE date="+"'" +date+ "'"+"AND time="+"'" +time+ "'"+"AND table_id="+"'" +table_id+ "'");
+			while(checkSet.next())
 			{
-				//같은 시간인지 확인
-				ResultSet timeCheckSet = stmt.executeQuery("SELECT time from reservation WHERE date="+"'" +time+ "'");
-				if(timeCheckSet!=null)
+				if(checkSet.getInt(1)>0)
 				{
-					//같은 테이블인지 판단 있을시 이미 배정된 테이블 반환 
-					ResultSet tableCheckSet = stmt.executeQuery("SELECT table_id from reservation WHERE date="+"'" +table_id+ "'");
-					if(tableCheckSet!=null)
-					{
-						return "이미 배정된 테이블";
-					}
-					timeCheckSet.close();
+					return "이미 배정된 테이블";
 				}
-				dateCheckSet.close();
 			}
-			
+			checkSet.close();
 			//중복된 예약 없을 시 반환
 			int updateCount = stmt.executeUpdate(
 					"INSERT INTO reservation ( customer_id, table_id, time,date,covers,oid)" +
@@ -143,7 +134,7 @@ public class MainController {
   			  //TODO 
 			  /* 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함.
 		     * 아래는 예시 코드
-		     * http://localhost:8080/reservation.do?customer_id=1234&user_id=01&time=09:00:00&date=1971-01-03&covers=5&oid=0
+		     * http://localhost:8080/reservation.do?customer_id=1234&table_id=01&time=10:00:00&date=1971-01-21&covers=5&oid=12
 		     * 
 		     * customer -> 후에 user_id로 변경될 예정 
 		     */
