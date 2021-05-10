@@ -38,8 +38,11 @@ CREATE TABLE Reservation (
        arrivalTime  TIME
 ) ;
 
+
+-- 사용자 table 추가
 create table user (
 	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	admin		boolean		not null DEFAULT 0,
 	id 			varchar(20) not null UNIQUE,
 	password 	varchar(16) not null,
 	name 		varchar(16) not null,
@@ -52,5 +55,12 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8;
 -- SELECT schema_name, default_character_set_name FROM information_schema.schemata;
 -- SELECT CCSA.character_set_name FROM information_schema.`TABLES` T, information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA WHERE CCSA.collation_name = T.table_collation AND T.table_schema = "booksys" AND T.table_name = "user";
 
+
+-- Table 5개 기본으로 추가 (번호, 좌석)
+INSERT INTO `TABLE` (number, places) VALUES (1, 4);
+INSERT INTO `TABLE` (number, places) VALUES (2, 4);
+INSERT INTO `TABLE` (number, places) VALUES (3, 4);
+INSERT INTO `TABLE` (number, places) VALUES (4, 4);
+INSERT INTO `TABLE` (number, places) VALUES (5, 4);
 
 

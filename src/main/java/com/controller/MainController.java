@@ -8,6 +8,7 @@ import java.sql.Time;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,8 @@ import com.domain.User;
 import com.storage.Database;
 
 @SpringBootApplication
-@RestController
+//@RestController
+@Controller
 public class MainController {
 
 	public static void main(String[] args) {
@@ -27,6 +29,28 @@ public class MainController {
 		Database.getInstance();
 	}
 
+	@RequestMapping("/timeTable")
+	public String timeTable() {
+		return "timeTable";
+	}
+	
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@RequestMapping("/register")
+	public String register() {
+		return "register";
+	}
+	
+	@RequestMapping("/register.do")
+	public String register_do() {
+		
+		
+		return "timeTable";
+	}
+	
 	@GetMapping("/hello")
 	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return String.format("Hello %s!", name);
