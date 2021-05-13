@@ -170,8 +170,6 @@ public class MainController {
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "name") String name,
 			@RequestParam(value = "phoneNumber") String phoneNumber) {
-		
-		String result = "done";
 		try {
 			Statement stmt
 			  = Database.getConnection().createStatement() ;
@@ -181,7 +179,7 @@ public class MainController {
 			stmt.close() ;
 		}catch (SQLException e) {
 			e.printStackTrace() ;
-			result = "fail";
+			return "register";
 		}
 		
 		//TODO 
@@ -189,7 +187,7 @@ public class MainController {
 		 * 아래는 예시 코드
 		 * http://localhost:8080/register.do?id=test&password=1234&name=bb&phoneNumber=01012341234
 		 */
-		return result;
+		return "timeTable";
 	}	
 }
 
