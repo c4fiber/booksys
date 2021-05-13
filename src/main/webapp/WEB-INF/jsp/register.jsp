@@ -8,10 +8,12 @@
 </head>
 <body>
 	<form action="/register.do" method="post">
-		<input id="id" placeholder="아이디" type="text"></input>
-		<input id="name" placeholder="이름" type="text"></input>
-		<input id="phoneNumber" placeholder="전화번호" type="text"></input>
-		<input id="password" placeholder="비밀번호" type="password"></input>
+
+		<input name="id" placeholder="아이디" type="text"></input>
+		<input name="name" placeholder="이름" type="text"></input>
+		<input name="phoneNumber" placeholder="전화번호" type="text"></input>
+		<input name="password" placeholder="비밀번호" type="password"></input>
+
 		<button type='submit'>확인</button>
 	</form>
 </body>
