@@ -10,9 +10,6 @@ package com.persistency;
 
 import com.domain.Table;
 import com.storage.Database;
-
-import booksys.application.persistency.PersistentTable;
-
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
