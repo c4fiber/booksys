@@ -200,7 +200,8 @@ public class MainController {
 		     * customer -> 후에 user_id로 변경될 예정 
 		     */
 		return result;
-	}	
+	}
+}
 	
 
 

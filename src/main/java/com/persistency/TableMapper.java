@@ -142,7 +142,7 @@ public class TableMapper {
 		return v;
 	}
 	
-	public PersistentTable appropriateTable(Time time,Date date) {
+	public PersistentTable appropriateTable(Time time,Date date,int covers) {
 		try
 		{
 			/*
@@ -154,6 +154,7 @@ public class TableMapper {
 			Statement stmt = Database.getConnection().createStatement(); 
 			ResultSet checkSet = stmt.executeQuery("SELECT table_id from reservation WHERE time='"+time+"'"+"AND date='"+date+"'");
 			while (checkSet.next()) {
+				
 				nowReservationTable.add(checkSet.getInt(1));
 			}
 			checkSet.close();
@@ -163,7 +164,7 @@ public class TableMapper {
 			//빈 테이블 검색 
 			/*
 			 * findTableSQLsyntax=> SQL구문 생성
-			 * SELECT * from `table` WHERE '위에서 찾았던 이미 예약된 테이블이 아닌것'
+			 * SELECT * from `table` WHERE '위에서 찾았던 이미 예약된 테이블이 아닌것' 중 covers이상 places를 가진 것 
 			 */
 			stmt = Database.getConnection().createStatement(); 
 			StringBuffer findTableSQLsyntax = new StringBuffer();
@@ -171,6 +172,7 @@ public class TableMapper {
 			if (!nowReservationTable.isEmpty())
 			{
 				findTableSQLsyntax.append(" WHERE");
+				findTableSQLsyntax.append(" (places >="+covers+") AND ");
 				for(int i=0;i<nowReservationTable.size();i++)
 				{
 					findTableSQLsyntax.append(" (not number="+nowReservationTable.get(i)+")");	
