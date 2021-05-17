@@ -1,30 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE HTML>
 
-<!DOCTYPE html>
+
 <html>
-<head>
-<meta charset="EUC-KR">
-<title>Jsp page sample</title>
-</head>
-<body>
- 
-  <%-- <%= request.getAttribute("id") --%>
- 
-<h2> ë°˜ê°‘ìŠµë‹ˆë‹¤! <c:out value="${name}" default="anonymous"/> ë‹˜</h2>
-<c:out value="${session.}"
-<br><br>
+	<head>
+		<title>restaurant page</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="landing">
 
-<a href="/timeTable">GO TO TIMETABLE</a>
-<br><br>
-
-<a href="login">GO TO LOGIN</a>
-<br><br>
-
-<a href="register">GO TO REGISTER</a>
- 
- 
- 
-</body>
+		<!-- Header -->
+			<header id="header" class="alt">
+				<nav id="nav">
+					<ul>
+						<li><a href="/timeTable">È¨</a></li>
+						<li><a href="#">ÈÄ±â È®ÀÎ</a></li>
+					</ul>
+				</nav>
+			</header>
+		<!-- Banner -->
+			<section id="banner">
+				<h2>restaurant</h2>
+				<p>·¹½ºÅä¶û ÆäÀÌÁö ÀÔ´Ï´Ù.</p>
+				<ul class="actions">
+					<li><a href="login" class="button special big">·Î±×ÀÎ</a></li>
+					<li><a href="register" class="button special big">È¸¿ø°¡ÀÔ</a></li>
+				</ul>
+			</section>
+	</body>
 </html>
-

@@ -32,30 +32,19 @@ public class MainController {
 		SpringApplication.run(MainController.class, args);
 		Database.getInstance();
 	}
-
-	// 기본페이지. 테스트용입니다.
+	
+	// 기본 페이지
 	@RequestMapping("/")
 	public String index(HttpSession session) {
 		return "index";
 	}
 	
-	@RequestMapping("/timeTable")
-	public String timeTable() {
-		return "timeTable";
-	}
-	
-	@RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
-	
-	// 회원가입 페이지 로딩
+	// 회원가입
 	@RequestMapping("/register")
 	public String register() {
 		return "register";
 	}
-	
-	// 회원가입 로직 처리
+
 	@RequestMapping("/register.do")
 	public String register_do(@RequestParam("id") String id, 
 			@RequestParam("password") String password,
@@ -74,30 +63,15 @@ public class MainController {
 			e.printStackTrace() ;
 			result = "fail";
 		}
-		
-		//TODO 
-		/* 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함.
-		 * 아래는 예시 코드
-		 * http://localhost:8080/register.do?id=test&password=1234&name=bb&phoneNumber=01012341234
-		 */
 		return "index";
 	}	
 	
-	// 
-
+	// 로그인
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
+	}
 	
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
-
-	@GetMapping("/test")
-	public String test1(@RequestParam(value = "test", defaultValue = "TESTING!") String name) {
-		return String.format("TESTING NOW!!!! =  %s", name);
-	}
-
-
-
 	@RequestMapping("/login.do")
 	public String login(HttpServletRequest request, @RequestParam("id") String id, @RequestParam("password") String password, Model model) {
 		// 1. id키가 기본키이므로 id키로 Select문을 사용해 User객체를 받아옴
@@ -123,10 +97,16 @@ public class MainController {
 		 * ()) 매개변수와 User객체 비교하는데 쓸 수 있는 보조문 (필수아님)
 		 */
 			
-	
 		return "index";
 	}
-
+	
+	// 타임테이블 / 예약
+	@RequestMapping("/timeTable")
+	public String timeTable() {
+		return "timeTable";
+	}
+	
+	//TODO DAO 객체 만들어서 처리
 	/*
 	 * //column oid id password name phoneNumber => user 0 1 2 3 각 User의 column 내용을
 	 * 데이터베이스에서 가져와서 User 객체를 돌려준다.
@@ -152,7 +132,8 @@ public class MainController {
 		return c;
 	}
 
-	@GetMapping("/reservation.do")
+	// 예약
+	@RequestMapping("/reservation.do")
 	public String reservation(
 			@RequestParam(value = "customer_id") int customer_id,
 			@RequestParam(value = "table_id") String table_id,
@@ -192,7 +173,8 @@ public class MainController {
   			// 초안 구현 완료
   			2.user_id로 결정
   			4. PM님 시도대로 똑같은 코드 제작
-  			  //TODO 
+
+			//TODO Reservation 처리
 			  /* 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함.
 		     * 아래는 예시 코드
 		     * http://localhost:8080/reservation.do?customer_id=1234&table_id=01&time=10:00:00&date=1971-01-21&covers=5&oid=12
@@ -203,8 +185,3 @@ public class MainController {
 	}
 }
 	
-
-
-
-// TODO
-// add part
