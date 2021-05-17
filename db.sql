@@ -20,6 +20,14 @@ CREATE TABLE Customer (
        phoneNumber  CHAR(13) NOT NULL
 ) ;
 
+CREATE TABLE comment (
+       oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       id		 VARCHAR(20) not null UNIQUE,
+       date	     VARCHAR(12),
+       comment   CHAR(200) NOT NULL
+) ;
+
+
 CREATE TABLE WalkIn (
        oid	     int NOT NULL PRIMARY KEY,
        covers	 int,
