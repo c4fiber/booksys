@@ -16,7 +16,7 @@
 			<header id="header" class="alt">
 				<nav id="nav">
 					<ul>
-						<li><a href="/">홈</a></li>
+						<li><a href="/timeTable">홈</a></li>
 						<li><a href="#">후기 확인</a></li>
 					</ul>
 				</nav>
@@ -26,8 +26,8 @@
 				<h2>restaurant</h2>
 				<p>레스토랑 페이지 입니다.</p>
 				<ul class="actions">
-					<li><a href="login.jsp" class="button special big">로그인</a></li>
-					<li><a href="register.jsp" class="button special big">회원가입</a></li>
+					<li><a href="login" class="button special big">로그인</a></li>
+					<li><a href="register" class="button special big">회원가입</a></li>
 				</ul>
 			</section>
 	</body>
