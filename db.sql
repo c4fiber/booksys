@@ -57,6 +57,14 @@ create table user (
 	phoneNumber varchar(11) not null
 );
 
+-- 사용자 리뷰 추가
+create table comment (
+	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id 			varchar(20) not null UNIQUE,
+	date		varchar(12),
+	comment		varchar(200) not null,
+);
+
 -- DATABASE와 USER테이블의 charset=utf8 로 설정합니다. 한글깨짐을 방지하기 위함.
 ALTER DATABASE booksys DEFAULT CHARACTER SET utf8;
 ALTER TABLE user CONVERT TO CHARACTER SET utf8;
