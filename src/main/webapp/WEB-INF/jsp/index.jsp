@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!DOCTYPE HTML>
+
+
 <html>
 	<head>
 		<title>restaurant page</title>
@@ -14,7 +16,7 @@
 			<header id="header" class="alt">
 				<nav id="nav">
 					<ul>
-						<li><a href="index.jsp">홈</a></li>
+						<li><a href="/">홈</a></li>
 						<li><a href="#">후기 확인</a></li>
 					</ul>
 				</nav>
