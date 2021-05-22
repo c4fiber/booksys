@@ -34,8 +34,8 @@ public class MainController {
 		SpringApplication.run(MainController.class, args);
 		Database.getInstance();
 	}
-
-	// 기본페이지. 테스트용입니다.
+	
+	// 기본 페이지
 	@RequestMapping("/")
 	public String index(HttpSession session) {
 		return "index";
@@ -52,6 +52,8 @@ public class MainController {
 	}
 
 	// 회원가입 페이지 로딩
+  
+	// 회원가입
 	@RequestMapping("/register")
 	public String register() {
 		return "register";
@@ -72,7 +74,7 @@ public class MainController {
 			e.printStackTrace();
 			result = "fail";
 		}
-
+  
 		// TODO
 		/*
 		 * 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함. 아래는 예시 코드
@@ -80,20 +82,14 @@ public class MainController {
 		 * 01012341234
 		 */
 		return "index";
+	}	
+	
+	// 로그인
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
 	}
-
-	//
-
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
-
-	@GetMapping("/test")
-	public String test1(@RequestParam(value = "test", defaultValue = "TESTING!") String name) {
-		return String.format("TESTING NOW!!!! =  %s", name);
-	}
-
+	
 	@RequestMapping("/login.do")
 	public String login(HttpServletRequest request, @RequestParam("id") String id,
 			@RequestParam("password") String password, Model model) {
@@ -122,7 +118,14 @@ public class MainController {
 
 		return "index";
 	}
-
+	
+	// 타임테이블 / 예약
+	@RequestMapping("/timeTable")
+	public String timeTable() {
+		return "timeTable";
+	}
+	
+	//TODO DAO 객체 만들어서 처리
 	/*
 	 * //column oid id password name phoneNumber => user 0 1 2 3 각 User의 column 내용을
 	 * 데이터베이스에서 가져와서 User 객체를 돌려준다.
@@ -148,11 +151,14 @@ public class MainController {
 		return c;
 	}
 
-	@GetMapping("/reservation.do")
-	public String reservation(@RequestParam(value = "customer_id") int customer_id,
-			@RequestParam(value = "table_id") String table_id, @RequestParam(value = "time") Time time,
-			@RequestParam(value = "date") String date, @RequestParam(value = "covers") int covers,
-			@RequestParam(value = "oid") int oid) {
+	@RequestMapping("/reservation.do")
+	public String reservation(
+			@RequestParam(value = "customer_id") int customer_id,
+			@RequestParam(value = "table_id") String table_id,
+			@RequestParam(value = "time") Time time,
+			@RequestParam(value = "date") String date,
+			@RequestParam(value = "covers") int covers,
+			@RequestParam(value = "oid") int oid){
 		String result = "done";
 		try {
 			Statement stmt = Database.getConnection().createStatement();
@@ -175,6 +181,9 @@ public class MainController {
 			e.printStackTrace();
 			result = "fail";
 		}
+    
+    
+    
 		/*
 		 * public Reservation(int c, Date d, Time t, Table tab, Customer cust, Time arr)
 		 * arrivalTime은 아직 없으므로 NULL 고려해야할 점 1.table_id 받아 왔을 때 이미 예약 내에 같은 table_id가
@@ -243,6 +252,3 @@ public class MainController {
 	}
 
 }
-
-// TODO
-// add part
