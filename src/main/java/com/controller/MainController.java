@@ -40,18 +40,6 @@ public class MainController {
 	public String index(HttpSession session) {
 		return "index";
 	}
-
-	@RequestMapping("/timeTable")
-	public String timeTable() {
-		return "timeTable";
-	}
-
-	@RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
-
-	// 회원가입 페이지 로딩
   
 	// 회원가입
 	@RequestMapping("/register")
