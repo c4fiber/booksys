@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.boot.SpringApplication;
@@ -78,6 +79,13 @@ public class MainController {
 		return "login";
 	}
 	
+	@RequestMapping("/logout")
+	protected String logout(HttpServletRequest request)
+	{
+	        request.getSession().invalidate();
+	        return "index";
+	}
+	
 	@RequestMapping("/login.do")
 	public String login(HttpServletRequest request, @RequestParam("id") String id,
 			@RequestParam("password") String password, Model model) {
@@ -85,14 +93,16 @@ public class MainController {
 		User findUser = getUser("SELECT * FROM user WHERE id = '" + id + "'");
 		// 2. 없으면 false리턴
 		if (findUser == null)
+		{
 			return "index";
+		}
 		else {
 			// 3.id와 패스워드 같으면
 			if (id.equals(findUser.getId()) && password.equals(findUser.getPassword())) {
 				// 트루
-
 				HttpSession session = request.getSession();
 				session.setAttribute("name", findUser.getName());
+				session.setAttribute("id", id);
 				model.addAttribute("id", id);
 			}
 		}
@@ -130,6 +140,7 @@ public class MainController {
 				String name = rset.getString(5);
 				String phoneNumber = rset.getString(6);
 				c = new User(oid, id, password, name, phoneNumber);
+				
 			}
 			rset.close();
 			stmt.close();
@@ -140,7 +151,7 @@ public class MainController {
 	}
 
 	@RequestMapping("/reservation.do")
-	public String reservation(
+	public synchronized String reservation(
 			@RequestParam(value = "customer_id") int customer_id,
 			@RequestParam(value = "table_id") String table_id,
 			@RequestParam(value = "time") Time time,
