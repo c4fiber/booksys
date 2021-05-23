@@ -48,6 +48,12 @@ public class MainController {
 		return "register";
 	}
 
+	
+	@RequestMapping("/review")
+	public String review() {
+		return "review";
+	}
+
 	// 회원가입 로직 처리
 	@RequestMapping("/register.do")
 	public String register_do(@RequestParam("id") String id, @RequestParam("password") String password,

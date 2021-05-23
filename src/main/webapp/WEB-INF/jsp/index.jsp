@@ -24,6 +24,7 @@
 			buttonLog = "로그아웃";
 			System.out.println((String)session.getAttribute("id"));
 		}%>
+
 		<!-- Header -->
 			<header id="header" class="alt">
 				<nav id="nav">
