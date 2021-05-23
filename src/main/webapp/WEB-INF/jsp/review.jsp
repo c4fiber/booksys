@@ -72,7 +72,7 @@
 								<div class="panel-body">
 									<%-- form --%>
 									<form class="form-horizontal" role="form"
-										action="${review_write}" method="post">
+										action="/review.do" method="post">
 										<div class="form-group">
 											<label class="control-label col-sm-2">작성자(ID):</label>
 											<div class="col-sm-10">
