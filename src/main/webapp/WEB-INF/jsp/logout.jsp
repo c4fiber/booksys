@@ -1,12 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <link href="/css/NewFile.css"
 	rel="stylesheet" type="text/css" />
-<meta charset="EUC-KR">
-<title>로그아웃</title>
+<meta charset="utf-8">
+<title>濡쒓렇�븘�썐</title>
 </head>
 <body>
 	<form action="${pageContext.request.contextPath}/logout" method="post">
