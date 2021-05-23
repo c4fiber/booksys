@@ -65,7 +65,7 @@ public class BooksysDAO {
 	// 리뷰 작성 
 	public int addReview(String id, String comment, String date) {
 		String sql = "INSERT INTO review (id, date, comment) VALUES (?,?,?)";
-		int result = jt.update(sql, id, comment);
+		int result = jt.update(sql, id, date, comment);
 		
 		return result;
 	}
