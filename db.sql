@@ -20,6 +20,14 @@ CREATE TABLE Customer (
        phoneNumber  CHAR(13) NOT NULL
 ) ;
 
+CREATE TABLE comment (
+       oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       id		 VARCHAR(20) not null UNIQUE,
+       date	     VARCHAR(12),
+       comment   CHAR(200) NOT NULL
+) ;
+
+
 CREATE TABLE WalkIn (
        oid	     int NOT NULL PRIMARY KEY,
        covers	 int,
@@ -47,6 +55,14 @@ create table user (
 	password 	varchar(16) not null,
 	name 		varchar(16) not null,
 	phoneNumber varchar(11) not null
+);
+
+-- 사용자 리뷰 추가
+create table comment (
+	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id 			varchar(20) not null UNIQUE,
+	date		varchar(12),
+	comment		varchar(200) not null,
 );
 
 -- DATABASE와 USER테이블의 charset=utf8 로 설정합니다. 한글깨짐을 방지하기 위함.

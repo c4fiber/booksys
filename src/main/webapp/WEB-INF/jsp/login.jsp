@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="${pageContext.request.contextPath}/css/NewFile.css"
+<link href="/css/NewFile.css"
 	rel="stylesheet" type="text/css" />
 <meta charset="EUC-KR">
 <title>로그인</title>
@@ -14,6 +14,8 @@
 		<input name="password" placeholder="비밀번호" type="password"></input>
 		<button type='submit'>로그인</button>
 	</form>
+	
+	<br>
 	<form action="./register" method="post">
 		<button type='submit'>회원가입</button>
 	</form>

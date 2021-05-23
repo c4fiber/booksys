@@ -1,27 +1,31 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Time Table</title>
+<script>
+
+</script>
 </head>
 <body>
 	<%
 		for (int i = 1; i <= 10; i++) {
 	%>
 	<div style="width: 90px; float: left;">
-		<%=i%>¹ø Å×ÀÌºí
+		<%=i%>ë²ˆ í…Œì´ë¸”
 	</div>
 	<%
 		for (float j = 1; j <= 12; j++) {
 	%>
-	<form action="./checker.jsp" method="post"
-		style="width: 95px; float: left;">
+	<form name="myform" action="./reservation">
 		<input type="hidden" name="tableNumber" value="<%=i%>" /> <input
-			type="hidden" name="time" value="<%=17.5 + j / 2%>" /> <input
-			type="submit" name="button"
-			value="<%=(int) (17.5 + j / 2)%>:<%=(int) ((j - 1) % 2) * 3%>0 ~ <%=(int) (18 + j / 2)%>:<%=(int) (j % 2) * 3%>0" />
+			type="hidden" name="time" value="<%=17.5 + j / 2%>" />
+		<button type="submit" style="width: 75px; float: left;"><%=(int) (17.5 + j / 2)%>:<%=(int) ((j - 1) % 2) * 3%>0
+			~
+			<%=(int) (18 + j / 2)%>:<%=(int) (j % 2) * 3%>0
+		</button>
 	</form>
 	<%
 		}
@@ -32,6 +36,5 @@
 	<%
 		}
 	%>
-
 </body>
 </html>

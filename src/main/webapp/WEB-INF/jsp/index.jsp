@@ -1,6 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE HTML>
+
+
 <html>
 	<head>
 		<title>restaurant page</title>
@@ -9,23 +11,36 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="landing">
+		<% 
+		String log = "/login";
+		String user_id = (String)session.getAttribute("id");
+		String buttonLog = "ë¡œê·¸ì¸";
+		if(user_id==null)
+		{
+		
+		}
+		else{
+			log = "/logout";
+			buttonLog = "ë¡œê·¸ì•„ì›ƒ";
+			System.out.println((String)session.getAttribute("id"));
+		}%>
 
 		<!-- Header -->
 			<header id="header" class="alt">
 				<nav id="nav">
 					<ul>
-						<li><a href="">È¨</a></li>
-						<li><a href="review">ÈÄ±â È®ÀÎ</a></li>
+						<li><a href="/timeTable">í™ˆ</a></li>
+						<li><a href="#">í›„ê¸° í™•ì¸</a></li>
 					</ul>
 				</nav>
 			</header>
 		<!-- Banner -->
 			<section id="banner">
 				<h2>restaurant</h2>
-				<p>·¹½ºÅä¶û ÆäÀÌÁö ÀÔ´Ï´Ù.</p>
+				<p>ë ˆìŠ¤í† ë‘ í˜ì´ì§€ ì…ë‹ˆë‹¤.</p>
 				<ul class="actions">
-					<li><a href="login" class="button special big">·Î±×ÀÎ</a></li>
-					<li><a href="register" class="button special big">È¸¿ø°¡ÀÔ</a></li>
+					<li><a href=<%=log %> class="button special big"><%=buttonLog %></a></li>
+					<li><a href="register" class="button special big">íšŒì›ê°€ì…</a></li>
 				</ul>
 			</section>
 	</body>
