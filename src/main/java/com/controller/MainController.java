@@ -5,14 +5,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,29 +26,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.domain.Comment;
+import com.dao.BooksysDAO;
+import com.domain.Review;
 import com.domain.Customer;
 import com.domain.Table;
 import com.domain.User;
 import com.storage.Database;
 
 @SpringBootApplication
-//@RestController
+@ComponentScan(basePackages= {"com"})
+
 @Controller
 public class MainController {
+	@Autowired BooksysDAO booksysDAO;
+	
+	// session확보용 객체
+	User user = new User("","anonymous"); 
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainController.class, args);
 		Database.getInstance();
 	}
 
-	// 기본 페이지
+	/* 메인 페이지 */
 	@RequestMapping("/")
-	public String index(HttpSession session) {
+	public String index(Model model) {
+		model.addAttribute("id", user.getId());
+		model.addAttribute("name", user.getName());
 		return "index";
 	}
   
-	// 회원가입
+	/* 회원가입 파트 */
 	@RequestMapping("/register")
 	public String register() {
 		return "register";
@@ -50,33 +64,25 @@ public class MainController {
 
 	
 	@RequestMapping("/review")
-	public String review() {
+	public String review(Model model) {
+		
+		// model.addAttributes(review_bean,null);
+		
 		return "review";
 	}
 
-	// 회원가입 로직 처리
+	// 회원가입
 	@RequestMapping("/register.do")
-	public String register_do(@RequestParam("id") String id, @RequestParam("password") String password,
-			@RequestParam("name") String name, @RequestParam("phoneNumber") String phoneNumber) {
+	public String register_do(
+			@RequestParam("id") String id,
+			@RequestParam("password") String password,
+			@RequestParam("name") String name,
+			@RequestParam("phoneNumber") String phoneNumber,
+			Model model) {
 
-		String result = "done";
-		try {
-			Statement stmt = Database.getConnection().createStatement();
-			int updateCount = stmt.executeUpdate("INSERT INTO user (id, password, name, phoneNumber)" + "VALUES ('" + id
-					+ "', '" + password + "', '" + name + "', '" + phoneNumber + "')");
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			result = "fail";
-		}
-  
-		// TODO
-		/*
-		 * 정상적으로 작동하는지 확인하기 위해 return 값을 string 고정하였다. 차후 수정필요함. 아래는 예시 코드
-		 * http://localhost:8080/register.do?id=test&password=1234&name=bb&phoneNumber=
-		 * 01012341234
-		 */
-		return "index";
+		model.addAttribute("result", booksysDAO.register(id,password,name,phoneNumber));
+		
+		return "redirect:/";
 	}
 
 	// 로그인
@@ -86,41 +92,26 @@ public class MainController {
 	}
 	
 	@RequestMapping("/logout")
-	protected String logout(HttpServletRequest request)
+	protected String logout(HttpSession session)
 	{
-	        request.getSession().invalidate();
-	        return "index";
+	       	session.invalidate();
+	        return "redirect:/";
 	}
 	
 	@RequestMapping("/login.do")
-	public String login(HttpServletRequest request, @RequestParam("id") String id,
-			@RequestParam("password") String password, Model model) {
-		// 1. id키가 기본키이므로 id키로 Select문을 사용해 User객체를 받아옴
-		User findUser = getUser("SELECT * FROM user WHERE id = '" + id + "'");
-		// 2. 없으면 false리턴
-		if (findUser == null)
-		{
-			return "index";
+	public String login(
+			@RequestParam("id") String id,
+			@RequestParam("password") String password, 
+			Model model) {
+		
+		User result = booksysDAO.login(id, password);
+		
+		if (result != null) {
+			user.setId(result.getId());
+			user.setName(result.getName());
 		}
-		else {
-			// 3.id와 패스워드 같으면
-			if (id.equals(findUser.getId()) && password.equals(findUser.getPassword())) {
-				// 트루
-				HttpSession session = request.getSession();
-				session.setAttribute("name", findUser.getName());
-				session.setAttribute("id", id);
-				model.addAttribute("id", id);
-			}
-		}
-		/*
-		 * 이줄은 필수가 아닙니다. 읽지 않으셔도 됩니다. /AND password = '" + password + "'"
-		 */
-		/*
-		 * &&name.equals(findUser.getName())&&phoneNumber.equals(findUser.getPhoneNumber
-		 * ()) 매개변수와 User객체 비교하는데 쓸 수 있는 보조문 (필수아님)
-		 */
-
-		return "index";
+		
+		return "redirect:/";
 	}
 
 	// 타임테이블 / 예약
@@ -130,32 +121,6 @@ public class MainController {
 		return "timeTable";
 	}
 
-	// TODO DAO 객체 만들어서 처리
-	/*
-	 * //column oid id password name phoneNumber => user 0 1 2 3 각 User의 column 내용을
-	 * 데이터베이스에서 가져와서 User 객체를 돌려준다.
-	 */
-	private User getUser(String sql) {
-		User c = null;
-		try {
-			Statement stmt = Database.getInstance().getConnection().createStatement();
-			ResultSet rset = stmt.executeQuery(sql);
-			while (rset.next()) {
-				int oid = rset.getInt(1);
-				String id = rset.getString(3);
-				String password = rset.getString(4);
-				String name = rset.getString(5);
-				String phoneNumber = rset.getString(6);
-				c = new User(oid, id, password, name, phoneNumber);
-				
-			}
-			rset.close();
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return c;
-	}
 
 	/* 예약 파트 */
 	@RequestMapping("/reservation")
@@ -163,15 +128,10 @@ public class MainController {
 		return "reservation";
 	}
 
+	// 예약되어있는지 점검
 	@RequestMapping("/checkReservation")
 	public String reservation(@RequestParam int tableNumber, @RequestParam float time, Model model) {
-		// 날짜, 시간 기준으로 예약내역 조회
-		try {
-			Statement stmt = Database.getConnection().createStatement();
-			ResultSet checkSet = stmt.executeQuery("SELECT oid from reservation where");
-		} catch (Exception e) {
-
-		}
+		model.addAttribute("reservations", booksysDAO.selectAllReservations());
 
 		return "reservation";
 	}
@@ -184,7 +144,8 @@ public class MainController {
 			@RequestParam(value = "time") Time time,
 			@RequestParam(value = "date") String date,
 			@RequestParam(value = "covers") int covers,
-			@RequestParam(value = "oid") int oid){
+			@RequestParam(value = "oid") int oid,
+			Model model){
 		String result = "done";
 		try {
 			Statement stmt = Database.getConnection().createStatement();
@@ -234,10 +195,11 @@ public class MainController {
 	 */
 	final int COUNT = 10;
 
+	/* 리뷰 파트 */
 	@RequestMapping("/commentRead.do")
-	Vector<Comment> getComment(@RequestParam(value = "number") int number) {
+	Vector<Review> getComment(@RequestParam(value = "number") int number) {
 		// 전부 겹쳐있는 commentList
-		Vector<Comment> commentList = new Vector<>();
+		Vector<Review> commentList = new Vector<>();
 		try {
 			Statement stmt = Database.getConnection().createStatement();
 			stmt = Database.getConnection().createStatement();
@@ -245,7 +207,7 @@ public class MainController {
 			ResultSet checkSet = stmt.executeQuery(
 					"SELECT * from comment order by oid DESC limit " + ((number - 1) * COUNT) + ", " + COUNT);
 			while (checkSet.next()) {
-				Comment temp = new Comment(checkSet.getInt(1), 
+				Review temp = new Review(checkSet.getInt(1), 
 						checkSet.getString(2), 
 						checkSet.getString(3),
 						checkSet.getString(4));
@@ -262,22 +224,27 @@ public class MainController {
 	}
 
 	/*
-	 * comment를 DB로 넘겨줍니다.
+	 * review 작성. comment를 DB로 넘겨줍니다.
 	 */
-	@RequestMapping("/comment.do")
-	public String putComment(@RequestParam(value = "id") int id, @RequestParam(value = "comment") String comment,
-			@RequestParam(value = "date") String date, @RequestParam(value = "oid") int oid) {
-		String result = "done";
-		try {
-			Statement stmt = Database.getConnection().createStatement();
-			int updateCount = stmt.executeUpdate("INSERT INTO comment (id, date, comment)" + "VALUES ('" + id + "', '"
-					+ date + "', '" + comment + "')");
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			result = "fail";
+	@RequestMapping("/review.do")
+	public String putComment(
+			@RequestParam(value = "user_id") String id, 
+			@RequestParam(value = "review_content") String comment,
+			@RequestParam(value = "date", defaultValue="") String date,
+			Model model) {
+
+		if (booksysDAO.addReview(id, comment, date) != 1) {
+			model.addAttribute("result", "fail");
 		}
-		return "index";
+		return "review";
+	}
+	
+	// table 모두 출력
+	@RequestMapping("/select.do")
+	public String selectAllTable(Model model) {
+		model.addAttribute("results",booksysDAO.selectAll());
+		
+		return "dbTableSelect";
 	}
 
 }
