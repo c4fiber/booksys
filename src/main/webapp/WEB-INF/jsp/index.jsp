@@ -30,7 +30,7 @@
 				<nav id="nav">
 					<ul>
 						<li><a href="/timeTable">홈</a></li>
-						<li><a href="#">후기 확인</a></li>
+						<li><a href="/review">후기 확인</a></li>
 					</ul>
 				</nav>
 			</header>

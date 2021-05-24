@@ -17,18 +17,6 @@ import com.domain.User;
 public class BooksysDAO {
 	@Autowired JdbcTemplate jt;
 
-	// table 전체 불러오기, dbTableSelect.jsp와 연동
-	public List<Map<String, ?>> selectAll() {
-		
-		return jt.query("select * from `table`", (rs, rowNum) -> {
-			Map<String, Object> mss = new HashMap<>();
-			mss.put("oid", rs.getInt(1));
-			mss.put("number", rs.getInt(2));
-			mss.put("places", rs.getInt(3));
-			return mss;
-		});
-	}
-	
 	// 로그인: match하는 User Object(id, name 갱신) 반환. 없으면 null
 	public User login(String id, String password){
 		
@@ -39,7 +27,7 @@ public class BooksysDAO {
 				);
 	}
 	
-	// 회원가입 데이터 삽입: return 1(성공), 0(실패)
+	// 회원가입: return 1(성공), 0(실패)
 	public int register(String id, String password, String name, String phoneNumber) {
 		// insert문은 update method를 사용한다.
 		String sql = "INSERT INTO user (id, password, name, phoneNumber) VALUES (?,?,?,?)";
@@ -47,7 +35,6 @@ public class BooksysDAO {
 		
 		return result;
 	}
-	//
 	
 	//date인자를 받아서 입력될 날짜에 해당하는 예약 리스트로 뽑아올수있게
 	public List<Map<String,?>> takeAllReservationsUseDate(Date date){
@@ -65,6 +52,17 @@ public class BooksysDAO {
 	
 	//mss->리뷰를 가져올께요
 	
+
+
+	// 예약 추가
+	public int addReservation(int covers, String date, String time, int table_id, int customer_id) {
+		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
+		int result = jt.update(sql, covers, date, time, table_id, customer_id);
+		
+		return result;		
+	}
+
+
 	// 예약 조회
 	public List<Map<String, ?>> selectAllReservations() {
 		
@@ -109,4 +107,19 @@ public class BooksysDAO {
 		
 		return result;
 	}
+  
+  	// table 전체 불러오기, dbTableSelect.jsp와 연동
+	public List<Map<String, ?>> selectAll() {
+
+		return jt.query("select * from `table`", (rs, rowNum) -> {
+			Map<String, Object> mss = new HashMap<>();
+			mss.put("oid", rs.getInt(1));
+			mss.put("number", rs.getInt(2));
+			mss.put("places", rs.getInt(3));
+			return mss;
+		});
+	}
+	
+
+	
 }

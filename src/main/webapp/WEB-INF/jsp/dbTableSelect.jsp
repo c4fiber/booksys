@@ -10,7 +10,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<table border="20">
+	<h3>Table 상태</h3>
+	<table border="3">
 		<tr>
 			<td>oid</td>
 			<td>number</td>
@@ -24,9 +25,30 @@
 			</tr>
 		</c:forEach>
 	</table>
+	<br>
+	<br>
+	<h3>예약 상태</h3>
+		<table border="3">
+		<tr>
+			<td>covers</td>
+			<td>date</td>
+			<td>time</td>
+			<td>table_id</td>
+			<td>customer_id</td>
+			<td>arrivalTime</td>
+		</tr>
+		<c:forEach var="r" items="${reservations}" varStatus="Status">
+			<tr>
+				<td>${r.covers}</td>
+				<td>${r.date}</td>
+				<td>${r.time}</td>
+				<td>${r.table_id}</td>
+				<td>${r.customer_id}</td>
+				<td>${r.arrivalTime}</td>
+			</tr>
+		</c:forEach>
+	</table>
 	
-	
-	<h2>${result}</h2>
 
 </body>
 </html>
