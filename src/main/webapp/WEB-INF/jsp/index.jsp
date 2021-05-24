@@ -29,7 +29,7 @@
 			<header id="header" class="alt">
 				<nav id="nav">
 					<ul>
-						<li><a href="/timeTable">홈</a></li>
+						<li><a href="checkdate">홈</a></li>
 						<li><a href="#">후기 확인</a></li>
 					</ul>
 				</nav>

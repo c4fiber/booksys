@@ -54,6 +54,12 @@ public class MainController {
 		return "review";
 	}
 
+	// 날짜 선택
+	@RequestMapping("/checkdate")
+	public String checkdate() {
+		return "checkdate";
+	}
+	
 	// 회원가입 로직 처리
 	@RequestMapping("/register.do")
 	public String register_do(@RequestParam("id") String id, @RequestParam("password") String password,

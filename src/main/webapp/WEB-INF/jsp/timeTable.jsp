@@ -17,14 +17,14 @@
 		<%=i%>번 테이블
 	</div>
 	<%
-		for (float j = 1; j <= 12; j++) {
+		for (float j = 1; j <= 4; j++) {
 	%>
 	<form name="myform" action="./reservation">
 		<input type="hidden" name="tableNumber" value="<%=i%>" /> <input
-			type="hidden" name="time" value="<%=17.5 + j / 2%>" />
-		<button type="submit" style="width: 75px; float: left;"><%=(int) (17.5 + j / 2)%>:<%=(int) ((j - 1) % 2) * 3%>0
+			type="hidden" name="time" value="<%=16 + j * 2%>" />
+		<button type="submit" style="width: 75px; float: left;"><%=(int) (14 + j * 2)%>:<%=0%>0
 			~
-			<%=(int) (18 + j / 2)%>:<%=(int) (j % 2) * 3%>0
+			<%=(int) (16 + j * 2)%>:<%=0%>0
 		</button>
 	</form>
 	<%
