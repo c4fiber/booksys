@@ -142,48 +142,18 @@ public class MainController {
 	@RequestMapping("/reservation.do")
 	public synchronized String reservation(
 			@RequestParam(value = "customer_id") int customer_id,
-			@RequestParam(value = "table_id") String table_id,
+			@RequestParam(value = "table_id") int table_id,
 			@RequestParam(value = "time") Time time,
-			@RequestParam(value = "date") String date,
-			@RequestParam(value = "covers") int covers,
-			Model model){
-		
-		// 모든 예약을 cache로 가져온다
-		//TODO 해당 날짜의 예약만 가져오도록 변경
-		//TODO 가져온 예약과 대조하는 과정 추가
-		cacheR = booksysDAO.selectAllReservations();
-		
-		String result = "done";
-		try {
-			Statement stmt = Database.getConnection().createStatement();
-
-			// 같은 날인지 확인
-			ResultSet checkSet = stmt.executeQuery("SELECT oid from reservation WHERE date=" + "'" + date + "'"
-					+ "AND time=" + "'" + time + "'" + "AND table_id=" + "'" + table_id + "'");
-			while (checkSet.next()) {
-				if (checkSet.getInt(1) > 0) {
-					model.addAttribute("status", 0);
-					return "timeTable";
-				}
-			}
-			checkSet.close();
-			// 중복된 예약 없을 시 반환
-			int updateCount = stmt.executeUpdate(
-					"INSERT INTO reservation ( customer_id, table_id, time,date,covers,oid)" + "VALUES ('" + customer_id
-							+ "','" + table_id + "','" + time + "', '" + date + "', '" + covers + "')");
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			result = "fail";
+			@RequestParam(value = "date") Date date,
+			@RequestParam(value = "covers") int covers){
+		boolean bookAvailable = booksysDAO.nowTableReservationAvailable(date, time, table_id);
+		if(bookAvailable)
+		{
+			booksysDAO.addReservation(covers, date, time, table_id, customer_id);
 		}
-        
-		/*
-		 * public Reservation(int c, Date d, Time t, Table tab, Customer cust, Time arr)
-		 * arrivalTime은 아직 없으므로 NULL 고려해야할 점 1.table_id 받아 왔을 때 이미 예약 내에 같은 table_id가
-		 * 있으면 거부해 주는 작업 필요할 것 예상 (Select문) // 초안 구현 완료 2.user_id로 결정 4. PM님 시도대로 똑같은 코드 제작
-		 */
-		
-		return "timeTable";
+
+		return "timetable";
+
 	}
 
 	/*
