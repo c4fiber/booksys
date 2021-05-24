@@ -3,25 +3,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="/css/NewFile.css"
-	rel="stylesheet" type="text/css" />
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <title>로그인</title>
+<link href="./loginStyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<form action="/login.do" method="post">
-		<input name="id" placeholder="아이디" type="text"></input>
-		<input name="password" placeholder="비밀번호" type="password"></input>
-		<button type='submit'>로그인</button>
-	</form>
-	
-	<br>
-	<form action="./register" method="post">
-		<button type='submit'>회원가입</button>
-	</form>
+	<div class="all">
+		<form action="" method="post">
+			<input type="text" id="ID" placeholder="아이디" />
+			<div class="text2">
+				<input type="password" id="password" placeholder="비밀번호" />
+			</div>
+			<div class="button">
+				<button type='submit'>로 그 인</button>
+			</div>
+		</form>
+		<div class="link">
+			<a href="./register.jsp">회원가입</a>
+		</div>
+	</div>
 </body>
 </html>
-
-
-
-
