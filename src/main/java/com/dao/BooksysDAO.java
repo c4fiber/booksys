@@ -17,7 +17,7 @@ public class BooksysDAO {
 
 	// table 전체 불러오기, dbTableSelect.jsp와 연동
 	public List<Map<String, ?>> selectAll() {
-		
+
 		return jt.query("select * from `table`", (rs, rowNum) -> {
 			Map<String, Object> mss = new HashMap<>();
 			mss.put("oid", rs.getInt(1));
@@ -46,6 +46,14 @@ public class BooksysDAO {
 		return result;
 	}
 
+	// 예약 추가
+	public int addReservation(int covers, String date, String time, int table_id, int customer_id) {
+		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
+		int result = jt.update(sql, covers, date, time, table_id, customer_id);
+		
+		return result;		
+	}
+
 	// 예약 조회
 	public List<Map<String, ?>> selectAllReservations() {
 		
@@ -61,7 +69,7 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
-	
+
 	// 리뷰 작성 
 	public int addReview(String id, String comment, String date) {
 		String sql = "INSERT INTO review (id, date, comment) VALUES (?,?,?)";
@@ -69,4 +77,7 @@ public class BooksysDAO {
 		
 		return result;
 	}
+	
+
+	
 }
