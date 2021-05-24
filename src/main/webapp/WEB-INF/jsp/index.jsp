@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 
 
@@ -37,6 +38,7 @@
 			<section id="banner">
 				<h2>restaurant</h2>
 				<p>레스토랑 페이지 입니다.</p>
+				<p>${name}님 환영합니다.</p>
 				<ul class="actions">
 					<li><a href=<%=log %> class="button special big"><%=buttonLog %></a></li>
 					<li><a href="register" class="button special big">회원가입</a></li>

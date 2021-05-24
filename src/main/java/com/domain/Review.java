@@ -1,12 +1,12 @@
 package com.domain;
 
-public class Comment {
+public class Review {
 	protected int oid;
 	protected String id;
 	protected String date;
 	protected String comment;
 
-	public Comment(int aOid, String aId, String aDate, String aComment) {
+	public Review(int aOid, String aId, String aDate, String aComment) {
 		oid = aOid;
 		id = aId;
 		date = aDate;

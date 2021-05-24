@@ -5,6 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Time Table</title>
+<script>
+
+</script>
 </head>
 <body>
 	<%
@@ -16,7 +19,7 @@
 	<%
 		for (float j = 1; j <= 12; j++) {
 	%>
-	<form name="myform" action="./예약.jsp">
+	<form name="myform" action="./reservation">
 		<input type="hidden" name="tableNumber" value="<%=i%>" /> <input
 			type="hidden" name="time" value="<%=17.5 + j / 2%>" />
 		<button type="submit" style="width: 75px; float: left;"><%=(int) (17.5 + j / 2)%>:<%=(int) ((j - 1) % 2) * 3%>0

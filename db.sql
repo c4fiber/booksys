@@ -1,6 +1,8 @@
 DROP DATABASE booksys ;
 
 CREATE DATABASE booksys ;
+ALTER DATABASE booksys DEFAULT CHARACTER SET UTF8;
+-- SELECT schema_name, default_character_set_name FROM information_schema.schemata;
 
 USE booksys ;
 
@@ -19,14 +21,6 @@ CREATE TABLE Customer (
        name	     VARCHAR(32) NOT NULL,
        phoneNumber  CHAR(13) NOT NULL
 ) ;
-
-CREATE TABLE comment (
-       oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-       id		 VARCHAR(20) not null UNIQUE,
-       date	     VARCHAR(12),
-       comment   CHAR(200) NOT NULL
-) ;
-
 
 CREATE TABLE WalkIn (
        oid	     int NOT NULL PRIMARY KEY,
@@ -56,20 +50,18 @@ create table user (
 	name 		varchar(16) not null,
 	phoneNumber varchar(11) not null
 );
+ALTER TABLE user CONVERT TO CHARACTER SET utf8;
+-- SELECT CCSA.character_set_name FROM information_schema.`TABLES` T, information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA WHERE CCSA.collation_name = T.table_collation AND T.table_schema = "booksys" AND T.table_name = "user";
+
 
 -- 사용자 리뷰 추가
-create table comment (
+create table review (
 	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	id 			varchar(20) not null UNIQUE,
+	id 			varchar(20),
 	date		varchar(12),
 	comment		varchar(200) not null,
+	foreign key (id) references user (id)
 );
-
--- DATABASE와 USER테이블의 charset=utf8 로 설정합니다. 한글깨짐을 방지하기 위함.
-ALTER DATABASE booksys DEFAULT CHARACTER SET utf8;
-ALTER TABLE user CONVERT TO CHARACTER SET utf8;
--- SELECT schema_name, default_character_set_name FROM information_schema.schemata;
--- SELECT CCSA.character_set_name FROM information_schema.`TABLES` T, information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` CCSA WHERE CCSA.collation_name = T.table_collation AND T.table_schema = "booksys" AND T.table_name = "user";
 
 
 -- Table 5개 기본으로 추가 (번호, 좌석)

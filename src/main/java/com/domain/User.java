@@ -8,7 +8,7 @@
 
 package com.domain;
 
-public class User {
+public class User extends Object{
 	private int oid;
 	private String id;
 	private String password;
@@ -23,9 +23,15 @@ public class User {
 		phoneNumber = aPhoneNumber;
 	}
 
+	public User(String aID,String aName) {
+		id = aID;
+		name = aName;
+	}
+
 	public int getOid() {
 		return oid;
 	}
+
 	public String get() {
 		return name;
 	}
@@ -44,5 +50,13 @@ public class User {
 
 	public String getPassword() {
 		return password;
+	}
+	
+	public void setId(String aID) {
+		id = aID;
+	}
+	
+	public void setName(String aName) {
+		name = aName;
 	}
 }

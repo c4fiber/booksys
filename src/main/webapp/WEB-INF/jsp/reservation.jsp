@@ -22,7 +22,7 @@
 	</div>
 	<br>
 	<br>
-	<form action="./checker.jsp">
+	<form action="./reservation.do">
 		<input type="hidden" name="tableNumber" value="<%=tableNumber%>" /> <input
 			type="hidden" name="time" value="<%=time%>" />
 		<div style="width: 200px; margin: auto;">
