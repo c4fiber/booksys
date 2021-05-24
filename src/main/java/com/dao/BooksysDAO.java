@@ -80,8 +80,18 @@ public class BooksysDAO {
 		});
 	}
 	
-	
-	
+	// 리뷰 조회
+	public List<Map<String, ?>> selectAllComments() {
+
+		return jt.query("select * from comment", (rs, rowNum) -> {
+			Map<String, Object> mss = new HashMap<>();
+			mss.put("id", rs.getInt(2));
+			mss.put("date", rs.getDate(3));
+			mss.put("commnet", rs.getString(4));
+
+			return mss;
+		});
+	}
 
 	// 해당 날짜 해당 테이블에 중복된 예약이 있는지 확인
 	public boolean nowTableReservationAvailable(Date date, Time time, int table_id) {
