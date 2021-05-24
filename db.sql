@@ -31,12 +31,12 @@ CREATE TABLE WalkIn (
 ) ;
 
 CREATE TABLE Reservation (
-       oid	        int NOT NULL PRIMARY KEY,
-       covers	    int,
-       date	        DATE,
-       time	        TIME,
-       table_id	    int,
-       customer_id  int,
+       oid	        int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+       covers	    int NOT NULL,
+       date	        DATE NOT NULL,
+       time	        TIME NOT NULL,
+       table_id	    int NOT NULL,
+       customer_id  int NOT NULL,
        arrivalTime  TIME
 ) ;
 
