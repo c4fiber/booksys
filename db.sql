@@ -57,8 +57,8 @@ ALTER TABLE user CONVERT TO CHARACTER SET utf8;
 -- 사용자 리뷰 추가
 create table review (
 	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	id 			varchar(20),
-	date		varchar(12),
+	id 			varchar(20) not null,
+	date		varchar(12) not null,
 	comment		varchar(200) not null,
 	foreign key (id) references user (id)
 );

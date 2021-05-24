@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import com.storage.Database;
 @Controller
 public class MainController {
 	@Autowired BooksysDAO booksysDAO;
+	List<Map<String, ?>> cacheR = new ArrayList<Map<String, ?>>();
 	
 	// session확보용 객체
 	User user = new User("","anonymous"); 
@@ -128,8 +130,8 @@ public class MainController {
 		return "reservation";
 	}
 
-	// 예약되어있는지 점검
-	@RequestMapping("/checkReservation")
+	// 모든 예약 받기 (TEST)
+	@RequestMapping("/AllReservations.do")
 	public String reservation(@RequestParam int tableNumber, @RequestParam float time, Model model) {
 		model.addAttribute("reservations", booksysDAO.selectAllReservations());
 
@@ -148,13 +150,10 @@ public class MainController {
 		if(bookAvailable)
 		{
 			booksysDAO.addReservation(covers, date, time, table_id, customer_id);
-			return "timetable";
-		
 		}
-		else
-		{
-			return "timetable";
-		}
+
+		return "timetable";
+
 	}
 
 	/*
@@ -213,6 +212,7 @@ public class MainController {
 	@RequestMapping("/select.do")
 	public String selectAllTable(Model model) {
 		model.addAttribute("results",booksysDAO.selectAll());
+		model.addAttribute("reservations", booksysDAO.selectAllReservations());
 		
 		return "dbTableSelect";
 	}
