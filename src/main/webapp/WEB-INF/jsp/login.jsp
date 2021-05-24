@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>로그인</title>
-<link href="./loginStyle.css" rel="stylesheet" type="text/css">
+	<meta charset="UTF-8">
+	<title>로그인</title>
+	<link href="/assets/css/loginStyle.css" rel="stylesheet"/>
 </head>
 <body>
 	<div class="all">
@@ -19,7 +19,7 @@
 			</div>
 		</form>
 		<div class="link">
-			<a href="./register.jsp">회원가입</a>
+			<a href="/register">회원가입</a>
 		</div>
 	</div>
 </body>
