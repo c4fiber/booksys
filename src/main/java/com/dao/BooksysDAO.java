@@ -67,7 +67,6 @@ public class BooksysDAO {
 	
 	// 예약 조회
 	public List<Map<String, ?>> selectAllReservations() {
-		
 		return jt.query("select * from reservation", (rs, rowNum) -> {
 			Map<String, Object> mss = new HashMap<>();
 			mss.put("covers", rs.getInt(2));
@@ -76,7 +75,6 @@ public class BooksysDAO {
 			mss.put("table_id", rs.getInt(5));
 			mss.put("customer_id", rs.getInt(6));
 			mss.put("arrivalTime", rs.getTime(7));
-			
 			return mss;
 		});
 	}
