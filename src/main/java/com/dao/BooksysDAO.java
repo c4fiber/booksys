@@ -50,8 +50,17 @@ public class BooksysDAO {
 		});
 	}
 	
-	//mss->리뷰를 가져올께요
-	
+	//mss->리뷰를 가져온다
+	public List<Map<String, ?>> selectAllComments() {
+	      return jt.query("select * from comment", (rs, rowNum) -> {
+	         Map<String, Object> mss = new HashMap<>();
+	         mss.put("id", rs.getInt(2));
+	         mss.put("date", rs.getDate(3));
+	         mss.put("commnet", rs.getString(4));
+
+	         return mss;
+	      });
+	}
 
 
 	// 예약 추가
