@@ -44,7 +44,7 @@ CREATE TABLE Reservation (
 -- 사용자 table 추가
 create table user (
 	oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	admin		boolean		not null DEFAULT 0,
+	admin	    boolean		not null DEFAULT 0,
 	id 			varchar(20) not null UNIQUE,
 	password 	varchar(16) not null,
 	name 		varchar(16) not null,

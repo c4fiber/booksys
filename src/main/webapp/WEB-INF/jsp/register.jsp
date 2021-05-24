@@ -5,19 +5,25 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
+<link href="./loginStyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<form action="/register.do" method="post">
-
-		<input name="id" placeholder="아이디" type="text"></input>
-		<br><br>
-		<input name="name" placeholder="이름" type="text"></input>
-		<br><br>
-		<input name="phoneNumber" placeholder="전화번호" type="text"></input>
-		<br><br>
-		<input name="password" placeholder="비밀번호" type="password"></input>
-		<br><br><br>
-		<button type='submit'>확인</button>
-	</form>
+	<div class="all">
+		<form action="" method="post">
+			<input placeholder="아이디" type="text" />
+			<div class="text2">
+				<input placeholder="이름" type="text" />
+			</div>
+			<div class="text2">
+				<input placeholder="전화번호" type="text" />
+			</div>
+			<div class="text2">
+				<input placeholder="비밀번호" type="password" />
+			</div>
+			<div class="button">
+				<button type='submit'>회원 가입</button>
+			</div>
+		</form>
+	</div>
 </body>
 </html>
