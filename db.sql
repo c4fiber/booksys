@@ -64,7 +64,9 @@ create table review (
 );
 
 
--- Table 5개 기본으로 추가 (번호, 좌석)
+-- Data set
+
+
 INSERT INTO `TABLE` (number, places) VALUES (1, 4);
 INSERT INTO `TABLE` (number, places) VALUES (2, 4);
 INSERT INTO `TABLE` (number, places) VALUES (3, 4);

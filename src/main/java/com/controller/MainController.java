@@ -50,7 +50,9 @@ public class MainController {
 		Database.getInstance();
 	}
 
-	/* 메인 페이지 */
+	/* 
+	 * 메인 페이지
+	 */
 	@RequestMapping("/")
 	public String index(Model model) {
 		model.addAttribute("id", user.getId());
@@ -58,19 +60,12 @@ public class MainController {
 		return "index";
 	}
   
-	/* 회원가입 파트 */
+	/* 
+	 * 회원가입 파트 
+	 */
 	@RequestMapping("/register")
 	public String register() {
 		return "register";
-	}
-
-	
-	@RequestMapping("/review")
-	public String review(Model model) {
-		
-		// model.addAttributes(review_bean,null);
-		
-		return "review";
 	}
 
 	// 회원가입
@@ -87,7 +82,9 @@ public class MainController {
 		return "redirect:/";
 	}
 
-	// 로그인
+	/*
+	 *  로그인 & 로그아웃
+	 */
 	@RequestMapping("/login")
 	public String login() {
 		return "login";
@@ -102,8 +99,8 @@ public class MainController {
 	
 	@RequestMapping("/login.do")
 	public String login(
-			@RequestParam("id") String id,
-			@RequestParam("password") String password, 
+			@RequestParam(value = "id", defaultValue = "") String id,
+			@RequestParam(value = "password", defaultValue = "") String password, 
 			Model model) {
 		
 		User result = booksysDAO.login(id, password);
@@ -111,20 +108,27 @@ public class MainController {
 		if (result != null) {
 			user.setId(result.getId());
 			user.setName(result.getName());
+			
+			return "redirect:/";
+		}else {
+			model.addAttribute("alert", "yes");
+			
+			return "login";
 		}
-		
-		return "redirect:/";
 	}
 
-	// 타임테이블 / 예약
+	/*
+	 *  타임테이블
+	 */
 	@RequestMapping("/timeTable")
 	public String timeTable() {
 
 		return "timeTable";
 	}
 
-
-	/* 예약 파트 */
+	/*
+	 *  예약 파트 
+	 */
 	@RequestMapping("/reservation")
 	public String reservation() {
 		return "reservation";
@@ -159,50 +163,32 @@ public class MainController {
 	/*
 	 * DB로 부터 리뷰를 읽어 와서 VECTOR 객체로 반환합니다. 개수 COUNT개 매개변수로 넣어줄 것(number) 게시판 1번
 	 * 페이지..2번 페이지 ..3번.. 예 number에 1 넣으면 최신 데이터 0~10번째 리뷰를 읽어옵니다.
-	 * 
-	 * COUNT 페이지 당 몇 개씩 리뷰를 올릴 건지 조절 가능
 	 */
-	final int COUNT = 10;
+	
+	
 
-	/* 리뷰 파트 */
-	@RequestMapping("/commentRead.do")
-	Vector<Review> getComment(@RequestParam(value = "number") int number) {
-		// 전부 겹쳐있는 commentList
-		Vector<Review> commentList = new Vector<>();
-		try {
-			Statement stmt = Database.getConnection().createStatement();
-			stmt = Database.getConnection().createStatement();
-			// 가장 최신 부터 limit " +((페이지번호 1...2..3)*10번째부터)+", "+COUNT(10개씩));
-			ResultSet checkSet = stmt.executeQuery(
-					"SELECT * from comment order by oid DESC limit " + ((number - 1) * COUNT) + ", " + COUNT);
-			while (checkSet.next()) {
-				Review temp = new Review(checkSet.getInt(1), 
-						checkSet.getString(2), 
-						checkSet.getString(3),
-						checkSet.getString(4));
-				commentList.add(temp);
-			}
-			checkSet.close();
-			stmt.close();
-
-			return commentList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	/* 
+	 * 리뷰 파트
+	 */
+	final int COUNT = 10; // 페이지 당 리뷰 개수
+	
+	@RequestMapping("/review")
+	public String review(Model model) {
+		System.out.println(booksysDAO.selectAllReviews());
+		model.addAttribute("reviews", booksysDAO.selectAllReviews() );
+		
+		return "review";
 	}
 
-	/*
-	 * review 작성. comment를 DB로 넘겨줍니다.
-	 */
+	// review 추가. comment를 DB로 넘겨줍니다.
 	@RequestMapping("/review.do")
 	public String putComment(
-			@RequestParam(value = "user_id") String id, 
+			@RequestParam(value = "user_id") String user_id, 
 			@RequestParam(value = "review_content") String comment,
-			@RequestParam(value = "date", defaultValue="") String date,
+			@RequestParam(value = "date", defaultValue="") Date date,
 			Model model) {
 
-		if (booksysDAO.addReview(id, comment, date) != 1) {
+		if (booksysDAO.addReview(user_id, date, comment) != 1) {
 			model.addAttribute("result", "fail");
 		}
 		return "review";
@@ -211,7 +197,7 @@ public class MainController {
 	// table 모두 출력
 	@RequestMapping("/select.do")
 	public String selectAllTable(Model model) {
-		model.addAttribute("results",booksysDAO.selectAll());
+		model.addAttribute("results",booksysDAO.selectAllTables());
 		model.addAttribute("reservations", booksysDAO.selectAllReservations());
 		
 		return "dbTableSelect";
