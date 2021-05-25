@@ -87,17 +87,18 @@ public class BooksysDAO {
 	}
 	
 	//해당 날짜 해당 테이블에 중복된 예약이 있는지 확인
+	//제대로 구현되지 않은 듯하여 수정했습니다.
 	public boolean nowTableReservationAvailable(Date date,Time time,int table_id)
-	{
-		jt.query("SELECT oid from reservation WHERE date=" + "'" + date + "'"
-					+ "AND time=" + "'" + time + "'" + "AND table_id=" + "'" + table_id + "'",(rs,rowNum)->{
-						Map<String, Object> mss = new HashMap<>();
-						mss.put("customer_id", rs.getInt(6));
-						if(mss.isEmpty()) 
-							return true;
-						return false;
-						});
-		return false;
+	{	
+		//해당 날짜 시간 테이블에 맞는 테이블을 찾아 있으면 false없으면 true (예약가능 반환한다.)
+		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'"
+				+ " AND time=" + "'" + time + "'" + " AND table_id=" + "'" + table_id + "'";
+		int rowCount = jt.queryForObject(SQL, Integer.class);
+		if(rowCount>=1)
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	// 예약 추가
@@ -126,6 +127,8 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
+	
+	
 	
 
 	

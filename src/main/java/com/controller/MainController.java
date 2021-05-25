@@ -1,10 +1,6 @@
 package com.controller;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.dao.BooksysDAO;
 import com.domain.Review;
@@ -156,6 +154,23 @@ public class MainController {
 
 	}
 
+	
+	//예약 가능한지 불가능한지 테이블에 따라 판단해주는 메소드 
+	//테이블의 개수는 i의 5를 변수로 만들면 될 것 같습니다.
+	//시간대도 2시간 단위이기때문에 초기설정을 해주었고 만약 변경이 필요하다면 16을변수로 만들면 될 것 같습니다.
+	@RequestMapping(value="/check.do",method = RequestMethod.POST)
+	public synchronized String check(Model model,Date date)
+	{ 
+		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
+		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
+		for (int i = 1; i <= 5; i++) {
+				for (float j = 0; j <= 6; j=j+2) {
+					Time time =new Time((int) (16+j), 0, 0);					
+					model.addAttribute((int)((i*100)+16+j)+"", booksysDAO.nowTableReservationAvailable(date, time, i)+"");
+				}
+		}
+		return "timeTable";	
+	}
 	/*
 	 * DB로 부터 리뷰를 읽어 와서 VECTOR 객체로 반환합니다. 개수 COUNT개 매개변수로 넣어줄 것(number) 게시판 1번
 	 * 페이지..2번 페이지 ..3번.. 예 number에 1 넣으면 최신 데이터 0~10번째 리뷰를 읽어옵니다.
