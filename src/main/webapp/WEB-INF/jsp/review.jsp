@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
 <!DOCTYPE html>
@@ -35,13 +36,12 @@
 			</thead>
 
 			<tbody>
-				<c:forEach var="review_Bean" items="${requestScope.list}">
+				<c:forEach var="bean" items="${reviews}">
 					<tr class="info">
-						<td>${review_Bean.review_num}</td>
-						<td>${review_Bean.user_id}</td>
-						<td><a data-toggle="modal" data-target="#myModal2"
-							onclick="review_read(${review_Bean.review_num})">${review_Bean.review_title}</a></td>
-						<td>${review_Bean.review_goods_name}</td>
+						<td>${bean.review_num}</td>
+						<td>${bean.user_id}</td>
+						<td>${bean.date}</td>
+						<td>${bean.comment}</td>
 					</tr>
 				</c:forEach>
 
@@ -71,8 +71,8 @@
 								<div class="panel-heading">Review 작성</div>
 								<div class="panel-body">
 									<%-- form --%>
-									<form class="form-horizontal" role="form"
-										action="/review.do" method="post">
+									<form class="form-horizontal" role="form" action="/review.do"
+										method="post">
 										<div class="form-group">
 											<label class="control-label col-sm-2">작성자(ID):</label>
 											<div class="col-sm-10">
