@@ -2,6 +2,7 @@ package com.dao;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,6 @@ public class BooksysDAO {
 	 * @return isExist & isTrue ? User : null
 	 */
 	public User login(String id, String password) {
-
 		// queryForObject를 사용하면 결과가 0개일때 exception 발생
 		return DataAccessUtils
 				.singleResult(jt.query("select id, name, password FROM user where id = ? and password = ?",
