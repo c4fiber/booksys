@@ -12,7 +12,7 @@ CREATE TABLE Oid (
 
 CREATE TABLE `Table` (
        oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-       number	 INT NOT NULL,
+       number	 INT NOT NULL UNIQUE,
        places	 INT NOT NULL
 ) ;
 
