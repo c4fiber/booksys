@@ -9,15 +9,15 @@
 <link href="/assets/css/loginStyle.css" rel="stylesheet" />
 </head>
 <body>
-	<c:if test="${alert eq 'yes'}">
-		<script language="javascript">alert("login FAIL!!")</script>
+	<c:if test="${failed eq 'yes'}">
+		<script language="javascript">alert("login FAIL!!"); failed = 'no';</script>
 	</c:if>
 
 	<div class="all">
 		<form action="/login.do" method="post">
-			<input type="text" id="ID" placeholder="아이디" />
+			<input type="text" name="id" placeholder="아이디" />
 			<div class="text2">
-				<input type="password" id="password" placeholder="비밀번호" />
+				<input type="password" name="password" placeholder="비밀번호" />
 			</div>
 			<div class="button">
 				<button type='submit'>로 그 인</button>
