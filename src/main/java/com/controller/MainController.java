@@ -308,11 +308,11 @@ public class MainController {
 				int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
 				if(success==1)
 				{
-					resultMessage = date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약되었습니다.\n";
+					resultMessage += date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약되었습니다.\n";
 				}
 				else
 				{
-					resultMessage = date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약하였습니다.\n";
+					resultMessage += date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약하였습니다.\n";
 				}
 			}
 			
