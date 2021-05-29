@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="all">
-		<form action="" method="post">
+		<form action="/register.do" method="post">
 			<input placeholder="아이디" type="text" />
 			<div class="text2">
 				<input placeholder="이름" type="text" />
@@ -24,6 +24,9 @@
 				<button type='submit'>회원 가입</button>
 			</div>
 		</form>
+		<div class="link">
+			<a href="/">홈으로</a>
+		</div>
 	</div>
 </body>
 </html>
