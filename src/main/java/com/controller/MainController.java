@@ -102,7 +102,7 @@ public class MainController {
 			Model model) {
 		
 		User result = booksysDAO.login(id, password);
-		
+		System.out.println(result);
 		if (result != null) {
 			user.setId(result.getId());
 			user.setName(result.getName());
@@ -217,5 +217,15 @@ public class MainController {
 		
 		return "dbTableSelect";
 	}
+	
+	
+	
+	// 날짜 선택
+		@RequestMapping("/test")
+		public String reservation(Model model) {
+			model.addAttribute("id", user.getId());
+			model.addAttribute("name", user.getName());
+			return "test";
+		}
 	
 }
