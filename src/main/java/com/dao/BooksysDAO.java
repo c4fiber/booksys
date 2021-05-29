@@ -63,8 +63,8 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
-
-	// 날짜에 따른 예약
+  
+  	// 날짜에 따른 예약 조회
 	public List<Map<String, ?>> takeAllReservationsUseDate(Date date) {
 		return jt.query("select * from reservation where date='" + date.toString() + "'", (rs, rowNum) -> {
 			Map<String, Object> mss = new HashMap<>();
@@ -77,18 +77,27 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
+ 	
+	// 예약 추가
+	public int addReservation(int covers, String date, String time, int table_id, int customer_id) {
+		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
+		int result = jt.update(sql, covers, date, time, table_id, customer_id);
+		
+		return result;		
+	}
 
 	// 해당 날짜 해당 테이블에 중복된 예약이 있는지 확인
-	public boolean nowTableReservationAvailable(Date date, Time time, int table_id) {
-		jt.query("SELECT oid from reservation WHERE date=" + "'" + date + "'" + "AND time=" + "'" + time + "'"
-				+ "AND table_id=" + "'" + table_id + "'", (rs, rowNum) -> {
-					Map<String, Object> mss = new HashMap<>();
-					mss.put("customer_id", rs.getInt(6));
-					if (mss.isEmpty())
-						return true;
-					return false;
-				});
-		return false;
+	public boolean nowTableReservationAvailable(Date date,Time time,int table_id)
+	{	
+		//해당 날짜 시간 테이블에 맞는 테이블을 찾아 있으면 false없으면 true (예약가능 반환한다.)
+		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'"
+				+ " AND time=" + "'" + time + "'" + " AND table_id=" + "'" + table_id + "'";
+		int rowCount = jt.queryForObject(SQL, Integer.class);
+		if(rowCount>=1)
+		{
+			return false;
+		}
+		return true;
 	}
 
 	/*
@@ -129,5 +138,4 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
-
 }
