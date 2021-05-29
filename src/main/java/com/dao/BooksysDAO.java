@@ -1,6 +1,7 @@
 package com.dao;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,13 +130,29 @@ public class BooksysDAO {
 		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'"
 				+ " AND time=" + "'" + time + "'" + " AND table_id=" + "'" + table_id + "'";
 		int rowCount = jt.queryForObject(SQL, Integer.class);
-		if(rowCount>=1)
+		if(rowCount==0)
 		{
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
+	/**
+	 *  유저 id로 oid찾기
+	 * @param user_id
+	 * @return 성공(User객체) 없으면 null
+	 */
+	public List<Map<String,Integer>> findUserOiduseUser_id(String user_id) throws SQLException{	
+		//해당 날짜 시간 테이블에 맞는 테이블을 찾아 있으면 false없으면 true (예약가능 반환한다.)
+		String SQL = "SELECT oid from user WHERE id=" + "'" + user_id + "'";
+		return jt.query(SQL, (rs, rowNum) -> {
+				Map<String, Integer> mss = new HashMap<>();
+				mss.put("oid", rs.getInt(1));
+				return mss;
+		});
+	}
+	
+	
 	/**
 	 * 전체 리뷰를 조회하는 메소드
 	 * review_num, user_id, date, comment

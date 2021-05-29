@@ -140,8 +140,9 @@ public class MainController {
 	 * 타임 테이블 페이지
 	 */
 	@RequestMapping("/timeTable")
-	public String timeTable() {
-
+	public String timeTable(Model model) {
+		model.addAttribute("id", user.getId());
+		System.out.println(user.getId());
 		return "timeTable";
 	}
 
@@ -168,27 +169,7 @@ public class MainController {
 		return "reservation";
 	}
 
-	/**
-	 * 예약 추가
-	 * @param customer_id
-	 * @param table_id
-	 * @param time
-	 * @param date
-	 * @param covers
-	 * @return
-	 */
-	@RequestMapping("/reservation.do")
-	public synchronized String reservation(@RequestParam(value = "customer_id") int customer_id,
-			@RequestParam(value = "table_id") int table_id, @RequestParam(value = "time") Time time,
-			@RequestParam(value = "date") Date date, @RequestParam(value = "covers") int covers) {
-		boolean bookAvailable = booksysDAO.nowTableReservationAvailable(date, time, table_id);
-		if (bookAvailable) {
-			booksysDAO.addReservation(covers, date, time, table_id, customer_id);
-		}
-
-		return "timetable";
-
-	}
+	
 
 	/**
 	 * 예약 가능한지 불가능한지 테이블에 따라 판단해주는 메소드 
@@ -202,11 +183,12 @@ public class MainController {
 		int tables = 5; // 테이블 개수
 		int partTimes = 4; // 운영파트 개수 (운영시간: 16 ~ 24 -> 8시간 -> 4개 파트  
 		int startTime = 16; // 식당 시작시간 (default = 16)
-		
+		model.addAttribute("id", user.getId());
+		model.addAttribute("superDate",date);
 		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
 		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
 		for (int i = 1; i <= tables; i++) {
-				for (float j = 0; j < partTimes; j=j+2) {
+				for (float j = 0; j < partTimes*2; j=j+2) {
 					Time time =new Time((int) (startTime+j), 0, 0);					
 					model.addAttribute((int)((i*100)+startTime+j)+"", booksysDAO.nowTableReservationAvailable(date, time, i)+"");
 				}
@@ -273,12 +255,73 @@ public class MainController {
 	
 	
 	
-	// 날짜 선택
-		@RequestMapping("/test")
-		public String reservation(Model model) {
-			model.addAttribute("id", user.getId());
-			model.addAttribute("name", user.getName());
-			return "test";
+	/**
+	 * 예약 추가
+	 * @param table_id
+	 * @param time
+	 * @param date
+	 * @param covers
+	 * @return DB에 입력 
+	 */
+		@RequestMapping("/reservation.do")
+		public String reservation1(
+				@RequestParam(value = "table_id") String[] table_id, @RequestParam(value = "time") String[] time,
+				@RequestParam(value = "date") String[] date, @RequestParam(value = "covers") String[] covers,Model model,@RequestParam(value = "id") String[] id) throws SQLException {
+			
+			String resultMessage = null;
+			
+			List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
+			Map<String,Integer> tempMap = tempUserList.get(0);
+			int user_oid = tempMap.get("oid");
+			
+			/*
+			 * 타임테이블에 입력한 모든값 넣기
+			 * */
+			for(int i=0;i<date.length;i++)
+			{
+				/*
+				 * 값이 빈거 체크
+				 * */
+				if(covers[i].equals("")||time[i].equals("")||date[i].equals("")||table_id[i].equals(""))
+				{
+					resultMessage = resultMessage+i+"번째 줄 입력값에 빈칸이 있는 항목은 적용되지 않았습니다.\n";
+					continue;
+				}
+				Time tempTime = Time.valueOf(time[i]);
+				Date tempDate = Date.valueOf(date[i]);
+				int tempCovers = -500;
+				int temptable_id = -500;
+				/*
+				 * 굳이 없어도 되기는 하는데 숫자값 입력 체크
+				 * */
+				try {
+					tempCovers = Integer.valueOf(covers[i]);
+					temptable_id = Integer.valueOf(table_id[i]);
+				}
+				catch(NumberFormatException e)
+				{
+					resultMessage = resultMessage+i+"번째 줄 테이블 입력값이 잘못 되었습니다.\n";
+				}
+				/*
+				 * 성공과 실패 구분
+				 * */
+				int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
+				if(success==1)
+				{
+					resultMessage = date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약되었습니다.\n";
+				}
+				else
+				{
+					resultMessage = date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약하였습니다.\n";
+				}
+			}
+			
+			/*
+			 * resultPage로 메시지 넘기고 종료
+			 */
+			model.addAttribute("Message", resultMessage);
+			return "reservationResult";
 		}
 	
+
 }
