@@ -57,14 +57,39 @@
 		}
 	%>
 	</div>
-	
+
 	<br>
 	<br>
 	<br>
 	<%
 		}
 	%>
-	
+		<div>
+
+	<script src ="http://code.jquery.com/jquery-latest.min.js"></script>
+	<form action="" method="POST">
+		<div class='addInput'>
+		</div>
+		<button type='button' class='btnAdd'>예약추가</button>
+		<input type="submit">
+	</form>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('.btnAdd').click (function(){
+			$('.addInput').append(
+					'<input tye="type" name="test" value="">\<button type="button" class="btnRemove">예약버튼삭제하기</button><br>');
+		$('.btnRemove').on('click',function(){
+			$(this).prev().remove();
+			$(this).next().remove();
+			$(this).remove();
+			
+		});		
+		
+		
+		});
+	});
+	</script>
+		</div>
 	
 </body>
 </html>
