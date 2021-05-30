@@ -177,6 +177,18 @@ public class MainController {
 	 * @param date
 	 * @return
 	 */
+	@RequestMapping(value="/check.do",method = RequestMethod.GET)
+	public synchronized String goHome()
+	{ 
+		return "index";	
+	}
+	
+	/**
+	 * 예약 가능한지 불가능한지 테이블에 따라 판단해주는 메소드 
+	 * @param model
+	 * @param date
+	 * @return
+	 */
 	@RequestMapping(value="/check.do",method = RequestMethod.POST)
 	public synchronized String check(Model model,Date date)
 	{ 
@@ -267,12 +279,20 @@ public class MainController {
 		public String reservation1(
 				@RequestParam(value = "table_id") String[] table_id, @RequestParam(value = "time") String[] time,
 				@RequestParam(value = "date") String[] date, @RequestParam(value = "covers") String[] covers,Model model,@RequestParam(value = "id") String[] id) throws SQLException {
+			int user_oid=-500;
+			String resultMessage = "";
+			try {
+				List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
+				Map<String,Integer> tempMap = tempUserList.get(0);
+				user_oid = tempMap.get("oid");
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				resultMessage = "잘못된 접근입니다.";
+				model.addAttribute("Message", resultMessage);
+				return "reservationResult";
+			}
 			
-			String resultMessage = null;
-			
-			List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
-			Map<String,Integer> tempMap = tempUserList.get(0);
-			int user_oid = tempMap.get("oid");
 			
 			/*
 			 * 타임테이블에 입력한 모든값 넣기
@@ -284,7 +304,7 @@ public class MainController {
 				 * */
 				if(covers[i].equals("")||time[i].equals("")||date[i].equals("")||table_id[i].equals(""))
 				{
-					resultMessage = resultMessage+i+"번째 줄 입력값에 빈칸이 있는 항목은 적용되지 않았습니다.\n";
+					resultMessage = resultMessage+(i+1)+"번째 줄 입력값에 빈칸이 있는 항목은 적용되지 않았습니다.<br>";
 					continue;
 				}
 				Time tempTime = Time.valueOf(time[i]);
@@ -300,7 +320,7 @@ public class MainController {
 				}
 				catch(NumberFormatException e)
 				{
-					resultMessage = resultMessage+i+"번째 줄 테이블 입력값이 잘못 되었습니다.\n";
+					resultMessage = resultMessage+(i+1)+"번째 줄 테이블 입력값이 잘못 되었습니다.<br>";
 				}
 				/*
 				 * 성공과 실패 구분
@@ -308,11 +328,11 @@ public class MainController {
 				int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
 				if(success==1)
 				{
-					resultMessage += date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약되었습니다.\n";
+					resultMessage += date[i]+"일자 " +time[i]+"분 "+table_id[i]+"번 테이블 예약되었습니다.<br>";
 				}
 				else
 				{
-					resultMessage += date[i]+"일자" +time[i]+"분"+table_id[i]+"번 테이블 예약하였습니다.\n";
+					resultMessage += date[i]+"일자 " +time[i]+"분 "+table_id[i]+" 번 테이블 예약하였습니다.<br>";
 				}
 			}
 			

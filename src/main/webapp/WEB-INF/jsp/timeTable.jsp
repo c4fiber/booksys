@@ -1,20 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.*" %>
+<%@ page import="java.sql.Date" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>reservation</title>
 
+<script>
+var state = null;
+var title = 'reservation';
+var url = '/timeTable';
+history.pushState(state, title, url);
+</script>
 
 </head>
 <body>
 	<!--Time table로 접속을 할 경우 check.do로 request를 보내서 예약이 가능한지 불가능한지에 따른 model을 가져오게 됩니다.-->
 	<form action="check.do" method="post" name="run">
-		date <input type="date" name="date" />
-		<input type="submit" value="submit" />
+		
+		예약확인 <%
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String dateStr = dtf.format(LocalDateTime.now());
+		Date date = Date.valueOf(dateStr); 
+		out.print("<input type=\"date\" name=\"date\" value='"+date+"'/>");%> 
+		
+		<input type="submit" value="검색" />
 	</form>
-	
 	<%
 		if(request.getAttribute("superDate")!=null&&request.getAttribute("id")!=null)
 		{
@@ -81,22 +95,30 @@
 		</div>
 		<button type='button' class='btnAdd'>예약추가</button>
 		<input type="hidden" name="id" value=<%=(String)request.getAttribute("id") %>>
-		<input type="submit">
+		<input id='submitReservation' value="등록" type="submit" disabled="disabled"/>
 	</form>
 	<script type="text/javascript">
+	var line =0;
+	
 	$(document).ready(function(){
 		$('.btnAdd').click (function(){
 			$('.addInput').append(
-					'<input type="date" name="date" value=""> <select name="time"><option value=""></option><option value="16:00:00">16:00:00</option><option value="18:00:00">18:00:00</option><option value="20:00:00">20:00:00</option><option value="22:00:00">22:00:00</option></select><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button type="button" class="btnRemove">예약삭제</button><br>');
+			'<input type="date" name="date" value=""> <select name="time"><option value=""></option><option value="16:00:00">16:00:00</option><option value="18:00:00">18:00:00</option><option value="20:00:00">20:00:00</option><option value="22:00:00">22:00:00</option></select><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button id ="deleteButton" type="button" class="btnRemove">예약삭제</button><br>');
+			if( $("button[id=deleteButton]:button").length > 0)
+			{
+				$("input[id=submitReservation]:submit").attr("disabled",false); //보이기
+			}
 		$('.btnRemove').on('click',function(){
 			$(this).prev().remove();
 			$(this).prev().remove();
 			$(this).prev().remove();
 			$(this).prev().remove();
 			$(this).prev().remove();
-			$(this).next().remove();
 			$(this).remove();
-			
+			if( $("button[id=deleteButton]:button").length== 0)
+			{
+				$("input[id=submitReservation]:submit").attr("disabled",true); //보이기
+			}
 		});		
 		
 		
