@@ -15,15 +15,12 @@
 		<% 
 		String log = "/login";
 		String user_id = (String)session.getAttribute("id");
+		String user_name = (String)session.getAttribute("name");
 		String buttonLog = "로그인";
-		if(user_id==null)
-		{
 		
-		}
-		else{
+		if(!user_id.equals("")){
 			log = "/logout";
 			buttonLog = "로그아웃";
-			System.out.println((String)session.getAttribute("id"));
 		}%>
 		<!-- Header -->
 			<header id="header" class="alt">
@@ -38,7 +35,7 @@
 			<section id="banner">
 				<h2>restaurant</h2>
 				<p>레스토랑 페이지 입니다.</p>
-				<p>${name}님 환영합니다.</p>
+				<p><%=user_name %>님 환영합니다.</p>
 				<ul class="actions">
 					<li><a href=<%=log %> class="button special big"><%=buttonLog %></a></li>
 					<li><a href="register" class="button special big">회원가입</a></li>

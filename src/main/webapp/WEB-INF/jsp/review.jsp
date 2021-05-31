@@ -33,17 +33,17 @@
 				<tr>
 					<th>#</th>
 					<th>ID</th>
-					<th>Title</th>
 					<th>작성일</th>
+					<th>내용</th>
 				</tr>
 			</thead>
 
 			<tbody>
 				<c:forEach var="bean" items="${reviews}">
 					<tr class="info">
-						<td>${bean.review_num}</td>
+						<td width="30">${bean.review_num}</td>
 						<td>${bean.user_id}</td>
-						<td>${bean.date}</td>
+						<td width="100">${bean.date}</td>
 						<td>${bean.comment}</td>
 					</tr>
 				</c:forEach>
@@ -77,15 +77,11 @@
 									<form class="form-horizontal" role="form" action="/review.do"
 										method="post">
 										<div class="form-group">
-											<label class="control-label col-sm-2">작성자(ID):</label>
+											<label class="control-label col-sm-2">작성자(ID): </label>
 											<div class="col-sm-10">
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="control-label col-sm-2" for="pwd">제목:</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control" id="review_title"
-													name="review_title" placeholder="Title">
+												<label class="form-control" id="id" name="id"> 
+													<%=(String)session.getAttribute("id") %> 
+												</label>
 											</div>
 										</div>
 										<div class="form-group">
