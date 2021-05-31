@@ -1,25 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
 <!DOCTYPE html>
 
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Review</title>
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<link rel="stylesheet"
-	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<meta charset="UTF-8">
+	<title>Review</title>
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 
 <body>
+<c:if test="${not empty result }">
+	<script>alert('error!!')</script>
+</c:if>
+
+
 	<div class="container">
 		<div class="jumbotron">
 			<h2>Restaurant Review</h2>
@@ -76,8 +79,6 @@
 										<div class="form-group">
 											<label class="control-label col-sm-2">작성자(ID):</label>
 											<div class="col-sm-10">
-												<input type="text" class="form-control" id="user_id"
-													name="user_id" placeholder="ID">
 											</div>
 										</div>
 										<div class="form-group">
