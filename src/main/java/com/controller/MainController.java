@@ -177,7 +177,6 @@ public class MainController {
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
 		System.out.println(numOfTables);
-		System.out.println(date);
 		System.out.println(startTime);
 		System.out.println(endTime);
 		return "timeTable";
@@ -271,6 +270,19 @@ public class MainController {
 		return "redirect:/review";
 	}
 
+	
+	/**
+	 * 내 예약 확인
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/myReservation.do")
+	public String myReservation(Model model) {
+		System.out.print((String) model.getAttribute("myReservationID"));
+		return (String) model.getAttribute("myReservationID");
+	}
+	
 	/**
 	 * table 모두 출력
 	 * 
@@ -295,8 +307,9 @@ public class MainController {
 		public String reservation1(
 				@RequestParam(value = "table_id") String[] table_id, @RequestParam(value = "time") String[] time,
 				@RequestParam(value = "date") String[] date, @RequestParam(value = "covers") String[] covers,Model model,@RequestParam(value = "id") String[] id) throws SQLException {
-			int user_oid=-500;
+			
 			String resultMessage = "";
+			int user_oid=-500;
 			try {
 				List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
 				Map<String,Integer> tempMap = tempUserList.get(0);

@@ -38,7 +38,9 @@ history.pushState(state, title, url);
 	<%
 		if(request.getAttribute("superDate")!=null&&request.getAttribute("id")!=null)
 		{
+			
 			out.print(request.getAttribute("id")+"님! 현재 테이블 표는"+request.getAttribute("superDate")+"일 기준 입니다.");
+			out.print("<form action=\"myReservation.do\" method=\"post\"><input type=\"hidden\" name=\"myReservationID\" value='"+(String)request.getAttribute("id")+"'"+"><input type=\"button\" name=\"myReservation\" value='나의 예약 확인'/></form>");
 		}
 		//테이블의 개수로 5를 변수로 만들면 테이블이 증가되어도 괜찮을 것 같습니다. 단 변수2개를 post할때 더 넘겨줘야 할 것 같습니다.
 		for (int i = 1; i <= numOfTables; i++) {
