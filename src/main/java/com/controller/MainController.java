@@ -160,7 +160,10 @@ public class MainController {
 	 * 타임 테이블 페이지
 	 */
 	@RequestMapping("/timeTable")
-	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {  
+	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model,	HttpServletRequest request) {  
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
+		model.addAttribute("id", user_id);
 		// 입력 날짜가 없으면 오늘날짜로 입력(처음 timetable 열람 시)
 		if (date == null) {
 			System.out.println("debug: ok");
@@ -196,17 +199,20 @@ public class MainController {
   
 
 	@RequestMapping(value="/check.do",method = RequestMethod.POST)
-	public synchronized String check(Model model,Date date)
+	public synchronized String check(Model model,Date date,HttpServletRequest request	)
 	{ 
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
 		int tableNum = booksysDAO.selectNumOfTables(); // 전체 테이블 개수
   
+		model.addAttribute("id", user_id);
 		model.addAttribute("superDate",date);
   
 		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
 		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
 		for (int i = 1; i <= tableNum; i++) {
 			for (int j = startTime; j < endTime; j = j + 2) {
-				Time time = new Time((int) (startTime + j), 0, 0);
+				Time time = new Time( j, 0, 0);
 				model.addAttribute((i * 100 + j) + "", booksysDAO.nowTableReservationAvailable(date, time, i) + "");
 			}
 		}
@@ -259,6 +265,54 @@ public class MainController {
 		return "redirect:/review";
 	}
 
+	
+	/**
+	 * 내 예약 확인
+	 * 
+	 * @param model
+	 * @return
+	 * @throws SQLException 
+	 */
+	@RequestMapping(value="/myReservation.do",method = RequestMethod.POST)
+	public String myReservation(Model model,HttpServletRequest request	) {
+		int user_oid_my=-500;
+		String resultMessage="";
+		
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
+		try {
+			List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(user_id);
+			Map<String,Integer> tempMap = tempUserList.get(0);
+			user_oid_my = tempMap.get("oid");
+		}
+		catch(Exception e)
+		{
+			resultMessage = "잘못된 접근입니다.";
+			model.addAttribute("Message", resultMessage);
+			return "myReservation";
+		}
+		if(user_oid_my == -500) return "index";
+		
+		resultMessage += user_id+"님의 예약입니다.<br>";
+		List<String> reservationList = booksysDAO.userReservationList(user_oid_my);
+		if(reservationList.isEmpty()) 
+		{
+			resultMessage += "예약된 항목이 없습니다. <br>";
+		}
+		for(String st:reservationList)
+		{
+			resultMessage += st+"<br>";
+		}
+		resultMessage += "<br><br> 예약 수정이 필요하시면 레스토랑으로 문의 바랍니다.";
+		model.addAttribute("Message", resultMessage);
+		return "myReservation";
+	}
+	
+	@RequestMapping(value="/myReservation",method = RequestMethod.GET)
+	public String myReservation1(Model model) 
+	{
+		return "index";
+	}
 	/**
 	 * table 모두 출력
 	 * 

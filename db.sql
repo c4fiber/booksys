@@ -12,7 +12,7 @@ CREATE TABLE Oid (
 
 CREATE TABLE `Table` (
        oid	     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-       number	 INT NOT NULL UNIQUE,
+       number	 INT NOT NULL,
        places	 INT NOT NULL
 ) ;
 
@@ -69,15 +69,13 @@ create table review (
 
 insert into user (id,password,name, phoneNumber) value ('AlienSloth','1234','박성완','01066250251');
 insert into user (id,password,name, phoneNumber) value ('Sloth','1234','나무늘보','01112341234');
-insert into user (id,password,name, phoneNumber) value ('test','test','teste','01112341234');
-
 insert into review (id,date,comment) value ('AlienSloth','2021-05-20','잘 먹고 갑니다');
 insert into review (id,date,comment) value ('Sloth','2021-04-30','가성비 최고');
 insert into review (id,date,comment) value ('AlienSloth','2021-05-24','글자수 제한이 몇인지 궁금해서 어디까지 가능한지 적어보려 하는 킹갓 제네럴 엠페러 외계 나무늘보가 악질이라고 생각한다면 머리위로 똥골뱅이를 그려주세요');
+insert into Reservation (covers, date, time, table_id, customer_id) value (4,'2021-05-19','18:00',5,1);
+insert into Reservation (covers, date, time, table_id, customer_id) value (2,'2021-04-21','20:00',8,2);
+insert into Reservation (covers, date, time, table_id, customer_id) value (3,'2021-05-23','22:00',3,1);
 
-insert into Reservation (covers, date, time, table_id, customer_oid) value (4,'2021-05-19','18:00',1,1);
-insert into Reservation (covers, date, time, table_id, customer_oid) value (2,'2021-04-21','20:00',2,2);
-insert into Reservation (covers, date, time, table_id, customer_oid) value (3,'2021-05-23','22:00',2,1);
 
 INSERT INTO `TABLE` (number, places) VALUES (1, 4);
 INSERT INTO `TABLE` (number, places) VALUES (2, 4);
