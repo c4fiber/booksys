@@ -170,10 +170,9 @@ public class MainController {
 			date = today();
 		}
 
-		// table 개수, 입력 날짜, 영업 시작시간, 영업 종료시간
+		// table 개수, 영업 시작시간, 영업 종료시간
 		int numOfTables = booksysDAO.selectNumOfTables();
 		model.addAttribute("numOfTables", numOfTables);
-		model.addAttribute("date", date.toString());
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
 
@@ -216,13 +215,11 @@ public class MainController {
 			}
 		}
 
-		// List형태로 예약상황 조회 다루기
-		List<String> rStatus = booksysDAO.reservationStatus(date);
-		for (String bean : rStatus) {
-			System.out.println(bean); // TODO string이여야 하는데 int로 받아짐. 수정필요
-		}
-
-		System.out.println(rStatus);
+		// table 개수, 영업 시작시간, 영업 종료시간
+		int numOfTables = booksysDAO.selectNumOfTables();
+		model.addAttribute("numOfTables", numOfTables);
+		model.addAttribute("startTime", this.startTime);
+		model.addAttribute("endTime", this.endTime);
 
 		return "timeTable";
 	}

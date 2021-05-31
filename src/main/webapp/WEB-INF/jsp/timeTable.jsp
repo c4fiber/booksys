@@ -21,8 +21,6 @@ history.pushState(state, title, url);
 	int numOfTables = ((Integer)request.getAttribute("numOfTables")).intValue();
 	int startTime = ((Integer)request.getAttribute("startTime")).intValue();
 	int endTime = ((Integer)request.getAttribute("endTime")).intValue();
-	List<String> rStatus = (List<String>)request.getAttribute("reservationStatus");
-	String dateNow = request.getAttribute("date").toString().substring(0,10);
 %>
 </head>
 <body>
