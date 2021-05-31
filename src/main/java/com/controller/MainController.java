@@ -303,6 +303,7 @@ public class MainController {
 		{
 			resultMessage += st+"<br>";
 		}
+		resultMessage += "<br><br> 예약 수정이 필요하시면 레스토랑으로 문의 바랍니다.";
 		model.addAttribute("Message", resultMessage);
 		return "myReservation";
 	}
