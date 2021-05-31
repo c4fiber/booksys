@@ -60,12 +60,21 @@ public class BooksysDAO {
 	 * @return 성공(1), 실패(0)
 	 */
 	public int addReservation(int covers, Date date, Time time, int table_id, int customer_id) {
-		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_oid) VALUES (?,?,?,?,?)";
 		int result = jt.update(sql, covers, date, time, table_id, customer_id);
-
 		return result;
 	}
-
+	/**
+	 * 유저 예약 전체 조회
+	 * covers, date, time, table_id, customer_id, arrivalTime
+	 * @return 전체 예약 리스트(hashMap)
+	 */
+	public List<String> userReservationList(int user_oid) {
+		return jt.query("select * from reservation where customer_oid=? and arrivalTime is NULL", (rs, rowNum) -> {
+			
+			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString().substring(0,2) + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
+		}, user_oid);
+	}
 	/**
 	 * 예약 전체 조회
 	 * covers, date, time, table_id, customer_id, arrivalTime
@@ -102,7 +111,7 @@ public class BooksysDAO {
 	 */
 	public int addReservation(int covers, String date, String time, int table_id, int customer_id) {
 		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
-		int result = jt.update(sql, covers, date, time, table_id, customer_id);
+		int result = jt.update(sql, covers, date, time, table_id, ""+customer_id);
 		
 		return result;		
 	}
@@ -122,7 +131,7 @@ public class BooksysDAO {
 		int rowCount = jt.queryForObject(SQL, Integer.class);
 		if(rowCount==0)
 		{
-			return true;
+			return true;	
 		}
 		return false;
 	}

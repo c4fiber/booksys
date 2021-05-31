@@ -1,3 +1,4 @@
+<%@page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.*" %>
@@ -35,16 +36,18 @@ history.pushState(state, title, url);
 		<input type="submit" value="검색" />
 	</form>
 	
+	
 	<%
 		if(request.getAttribute("superDate")!=null&&request.getAttribute("id")!=null)
 		{
-			
 			out.print(request.getAttribute("id")+"님! 현재 테이블 표는"+request.getAttribute("superDate")+"일 기준 입니다.");
-			out.print("<form action=\"myReservation.do\" method=\"post\"><input type=\"hidden\" name=\"myReservationID\" value='"+(String)request.getAttribute("id")+"'"+"><input type=\"button\" name=\"myReservation\" value='나의 예약 확인'/></form>");
+			out.print("<form action=\"myReservation.do\" method=\"post\"><input type=\"submit\" name=\"myReservation\" value='나의 예약 확인'/></form>");
 		}
+		
 		//테이블의 개수로 5를 변수로 만들면 테이블이 증가되어도 괜찮을 것 같습니다. 단 변수2개를 post할때 더 넘겨줘야 할 것 같습니다.
 		for (int i = 1; i <= numOfTables; i++) {
 	%>
+
 	<div>
 		<p style="text-align:left;"><%=i%>번 테이블</p>
 		<!-- true면 중복된 예약이 있다는뜻 기존 타임테이블은 OrigintimeTable로 보존했습니다.(혹시몰라서) -->
@@ -54,6 +57,7 @@ history.pushState(state, title, url);
 		for (int j = startTime; j < endTime; j=j+2) {
 			//116 아래에 attribute를 가져오는 키는 116이면 (1번테이블)16시를 의미합니다. 다른시간은 필요없으므로
 			String temp = (String)request.getAttribute((i * 100 + j) + "");
+			System.out.println(temp+(i * 100 + j));
 			if(temp==null)
 			{
 				

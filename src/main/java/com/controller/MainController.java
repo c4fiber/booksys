@@ -210,7 +210,7 @@ public class MainController {
 		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
 		for (int i = 1; i <= tableNum; i++) {
 			for (int j = startTime; j < endTime; j = j + 2) {
-				Time time = new Time((int) (startTime + j), 0, 0);
+				Time time = new Time( j, 0, 0);
 				model.addAttribute((i * 100 + j) + "", booksysDAO.nowTableReservationAvailable(date, time, i) + "");
 			}
 		}
@@ -276,13 +276,42 @@ public class MainController {
 	 * 
 	 * @param model
 	 * @return
+	 * @throws SQLException 
 	 */
-	@RequestMapping("/myReservation.do")
+	@RequestMapping(value="/myReservation.do",method = RequestMethod.POST)
 	public String myReservation(Model model) {
-		System.out.print((String) model.getAttribute("myReservationID"));
-		return (String) model.getAttribute("myReservationID");
+		int user_oid_my=-500;
+		String resultMessage="";
+		try {
+			List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(user.getId());
+			Map<String,Integer> tempMap = tempUserList.get(0);
+			user_oid_my = tempMap.get("oid");
+		}
+		catch(Exception e)
+		{
+			resultMessage = "잘못된 접근입니다.";
+			model.addAttribute("Message", resultMessage);
+			return "myReservation";
+		}
+		if(user_oid_my == -500) return "index";
+		List<String> reservationList = booksysDAO.userReservationList(user_oid_my);
+		if(reservationList.isEmpty()) 
+		{
+			resultMessage += "예약된 항목이 없습니다. <br>";
+		}
+		for(String st:reservationList)
+		{
+			resultMessage += st+"<br>";
+		}
+		model.addAttribute("Message", resultMessage);
+		return "myReservation";
 	}
 	
+	@RequestMapping(value="/myReservation",method = RequestMethod.GET)
+	public String myReservation1(Model model) 
+	{
+		return "index";
+	}
 	/**
 	 * table 모두 출력
 	 * 
@@ -354,6 +383,7 @@ public class MainController {
 				/*
 				 * 성공과 실패 구분
 				 * */
+				System.out.println(user_oid);
 				int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
 				if(success==1)
 				{
