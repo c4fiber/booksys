@@ -36,8 +36,9 @@ CREATE TABLE Reservation (
        date	        DATE NOT NULL,
        time	        TIME NOT NULL,
        table_id	    int NOT NULL,
-       customer_id  int NOT NULL,
-       arrivalTime  TIME
+       customer_oid  int NOT NULL,
+       arrivalTime  TIME,
+       UNIQUE(date, time, table_id)
 ) ;
 
 
