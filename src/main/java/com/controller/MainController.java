@@ -163,8 +163,8 @@ public class MainController {
 	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {
 		model.addAttribute("id", user.getId());
 		System.out.println(user.getId());
-
-		// 입력 날짜가 없으면 오늘날짜로 입력(처음 timetable 열람 시)
+  
+    // 입력 날짜가 없으면 오늘날짜로 입력(처음 timetable 열람 시)
 		if (date == null) {
 			System.out.println("debug: ok");
 			date = today();
@@ -176,7 +176,7 @@ public class MainController {
 		model.addAttribute("date", date.toString());
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
-
+    
 		return "timeTable";
 	}
 
@@ -188,29 +188,40 @@ public class MainController {
 		return "reservation";
 	}
 
-	@RequestMapping(value = "/check.do", method = RequestMethod.GET)
-	public synchronized String goHome() {
-		return "index";
-	}
+	@RequestMapping(value="/check.do",method = RequestMethod.GET)
+	public synchronized String goHome()
+	{ 
+		return "index";	
 
-	
-
-	/**
+    	/**
 	 * 예약 가능한지 불가능한지 체크
 	 * 
 	 * @param model
 	 * @param date
 	 * @return
 	 */
-	@RequestMapping(value = "/check.do", method = RequestMethod.POST)
-	public synchronized String check(Model model, Date date) {
+	@RequestMapping("/reservation.do")
+	public synchronized String reservation(@RequestParam(value = "customer_id") int customer_id,
+			@RequestParam(value = "table_id") int table_id, @RequestParam(value = "time") Time time,
+			@RequestParam(value = "date") Date date, @RequestParam(value = "covers") int covers) {
+		boolean bookAvailable = booksysDAO.nowTableReservationAvailable(date, time, table_id);
+		if (bookAvailable) {
+			booksysDAO.addReservation(covers, date, time, table_id, customer_id);
+		}
+
+		return "redirect:/timetable";
+	}
+
+	@RequestMapping(value="/check.do",method = RequestMethod.POST)
+	public synchronized String check(Model model,Date date)
+	{ 
 		int tableNum = booksysDAO.selectNumOfTables(); // 전체 테이블 개수
-
+  
 		model.addAttribute("id", user.getId());
-		model.addAttribute("superDate", date);
-
-		// ((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
-		// 시간은 00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
+		model.addAttribute("superDate",date);
+  
+		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
+		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
 		for (int i = 1; i <= tableNum; i++) {
 			for (int j = startTime; j < endTime; j = j + 2) {
 				Time time = new Time((int) (startTime + j), 0, 0);
@@ -222,10 +233,9 @@ public class MainController {
 		List<String> rStatus = booksysDAO.reservationStatus(date);
 		for (String bean : rStatus) {
 			System.out.println(bean); // TODO string이여야 하는데 int로 받아짐. 수정필요
-		}
 
 		System.out.println(rStatus);
-
+		}
 		return "timeTable";
 	}
 
