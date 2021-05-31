@@ -52,11 +52,6 @@ public class MainController {
 	List<Map<String, ?>> cacheR = new ArrayList<Map<String, ?>>();
 
 	/**
-	 * session확보용 객체
-	 */
-	User user = new User("", "anonymous");
-
-	/**
 	 * 식당 운영시간 (default = 16 ~ 24)
 	 */
 	final int startTime = 16;
@@ -83,9 +78,14 @@ public class MainController {
 	 * 메인 페이지
 	 */
 	@RequestMapping("/")
-	public String index(Model model) {
-		model.addAttribute("id", user.getId());
-		model.addAttribute("name", user.getName());
+	public String index(Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("id") == null) {
+			System.out.println("logic ok");
+			session.setAttribute("id", "");
+			session.setAttribute("name", "ANONYMOUS");
+		}
+
 		return "index";
 	}
 
@@ -140,14 +140,14 @@ public class MainController {
 	 */
 	@RequestMapping("/login.do")
 	public String login(@RequestParam(value = "id", defaultValue = "") String id,
-			@RequestParam(value = "password", defaultValue = "") String password, Model model) {
+			@RequestParam(value = "password", defaultValue = "") String password, 
+			Model model, HttpSession session) {
 
-		System.out.println("id&password" + id + password);
 		User result = booksysDAO.login(id, password);
 		if (result != null) {
-			user.setId(result.getId());
-			user.setName(result.getName());
-
+			session.setAttribute("id", result.getId());
+			session.setAttribute("name", result.getName());
+			
 			return "redirect:/";
 		} else {
 			model.addAttribute("failed", "yes");
@@ -160,10 +160,10 @@ public class MainController {
 	 * 타임 테이블 페이지
 	 */
 	@RequestMapping("/timeTable")
-	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {
-		model.addAttribute("id", user.getId());
-		System.out.println(user.getId());
-
+	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model,	HttpServletRequest request) {  
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
+		model.addAttribute("id", user_id);
 		// 입력 날짜가 없으면 오늘날짜로 입력(처음 timetable 열람 시)
 		if (date == null) {
 			System.out.println("debug: ok");
@@ -175,7 +175,10 @@ public class MainController {
 		model.addAttribute("numOfTables", numOfTables);
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
-
+		System.out.println(numOfTables);
+		System.out.println(date);
+		System.out.println(startTime);
+		System.out.println(endTime);
 		return "timeTable";
 	}
 
@@ -187,30 +190,29 @@ public class MainController {
 		return "reservation";
 	}
 
-	@RequestMapping(value = "/check.do", method = RequestMethod.GET)
-	public synchronized String goHome() {
-		return "index";
+	@RequestMapping(value="/check.do",method = RequestMethod.GET)
+	public synchronized String goHome()
+	{ 
+	
+		return "index";	
 	}
+  
 
-	/**
-	 * 예약 가능한지 불가능한지 체크
-	 * 
-	 * @param model
-	 * @param date
-	 * @return
-	 */
-	@RequestMapping(value = "/check.do", method = RequestMethod.POST)
-	public synchronized String check(Model model, Date date) {
+	@RequestMapping(value="/check.do",method = RequestMethod.POST)
+	public synchronized String check(Model model,Date date,HttpServletRequest request	)
+	{ 
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
 		int tableNum = booksysDAO.selectNumOfTables(); // 전체 테이블 개수
-
-		model.addAttribute("id", user.getId());
-		model.addAttribute("superDate", date);
-
-		// ((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
-		// 시간은 00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
+  
+		model.addAttribute("id", user_id);
+		model.addAttribute("superDate",date);
+  
+		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
+		// 시간은  00~ 18 20 22 24~이고 테이블은 무한정 늘어날 수 있기 때문에 로직을 그러하게 작성하였습니다.
 		for (int i = 1; i <= tableNum; i++) {
 			for (int j = startTime; j < endTime; j = j + 2) {
-				Time time = new Time((int) (startTime + j), 0, 0);
+				Time time = new Time( j, 0, 0);
 				model.addAttribute((i * 100 + j) + "", booksysDAO.nowTableReservationAvailable(date, time, i) + "");
 			}
 		}
@@ -234,9 +236,7 @@ public class MainController {
 	public String review(Model model) {
 		final int COUNT = 10; // 페이지 당 리뷰 개수
 
-		System.out.println(booksysDAO.selectAllReviews());
 		model.addAttribute("reviews", booksysDAO.selectAllReviews());
-		model.addAttribute("user_id", user.getId());
 
 		return "review";
 	}
@@ -249,27 +249,70 @@ public class MainController {
 	 * @param model
 	 */
 	@RequestMapping("/review.do")
-	public String putComment(@RequestParam(value = "user_id", defaultValue = "") String user_id,
-			@RequestParam(value = "review_content") String comment, Model model) throws SQLException {
-
-		if (user_id.equals("")) {
-			model.addAttribute("result", "id fail");
-
-		} else {
-
-			// string -> date 형변환 -> 데이터 타입 맞추기
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String dateStr = dtf.format(LocalDateTime.now());
-			Date date = Date.valueOf(dateStr);
-
-			if (booksysDAO.addReview(user_id, date, comment) != 1) {
+	public String putComment(@RequestParam(value = "review_content") String comment, Model model, HttpServletRequest request) throws SQLException {
+			HttpSession session = request.getSession();
+			String user_id = (String) session.getAttribute("id");
+			
+			if(user_id.equals("")) {
+				return"redirect:/index";
+			}
+			
+			if (booksysDAO.addReview(user_id, today(), comment) != 1) {
 				model.addAttribute("result", "sql fail");
 			}
-		}
+
 
 		return "redirect:/review";
 	}
 
+	
+	/**
+	 * 내 예약 확인
+	 * 
+	 * @param model
+	 * @return
+	 * @throws SQLException 
+	 */
+	@RequestMapping(value="/myReservation.do",method = RequestMethod.POST)
+	public String myReservation(Model model,HttpServletRequest request	) {
+		int user_oid_my=-500;
+		String resultMessage="";
+		
+		HttpSession session = request.getSession();
+		String user_id = (String) session.getAttribute("id");
+		try {
+			List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(user_id);
+			Map<String,Integer> tempMap = tempUserList.get(0);
+			user_oid_my = tempMap.get("oid");
+		}
+		catch(Exception e)
+		{
+			resultMessage = "잘못된 접근입니다.";
+			model.addAttribute("Message", resultMessage);
+			return "myReservation";
+		}
+		if(user_oid_my == -500) return "index";
+		
+		resultMessage += user_id+"님의 예약입니다.<br>";
+		List<String> reservationList = booksysDAO.userReservationList(user_oid_my);
+		if(reservationList.isEmpty()) 
+		{
+			resultMessage += "예약된 항목이 없습니다. <br>";
+		}
+		for(String st:reservationList)
+		{
+			resultMessage += st+"<br>";
+		}
+		resultMessage += "<br><br> 예약 수정이 필요하시면 레스토랑으로 문의 바랍니다.";
+		model.addAttribute("Message", resultMessage);
+		return "myReservation";
+	}
+	
+	@RequestMapping(value="/myReservation",method = RequestMethod.GET)
+	public String myReservation1(Model model) 
+	{
+		return "index";
+	}
 	/**
 	 * table 모두 출력
 	 * 
@@ -282,73 +325,81 @@ public class MainController {
 
 		return "dbTableSelect";
 	}
-
 	/**
 	 * 예약 추가
-	 * 
 	 * @param table_id
 	 * @param time
 	 * @param date
 	 * @param covers
-	 * @return DB에 입력
+	 * @return DB에 입력 
 	 */
-	@RequestMapping("/reservation.do")
-	public String reservation1(@RequestParam(value = "table_id") String[] table_id,
-			@RequestParam(value = "time") String[] time, @RequestParam(value = "date") String[] date,
-			@RequestParam(value = "covers") String[] covers, Model model, @RequestParam(value = "id") String[] id)
-			throws SQLException {
-		int user_oid = -500;
-		String resultMessage = "";
-		try {
-			List<Map<String, Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
-			Map<String, Integer> tempMap = tempUserList.get(0);
-			user_oid = tempMap.get("oid");
-		} catch (ArrayIndexOutOfBoundsException e) {
-			resultMessage = "잘못된 접근입니다.";
+		@RequestMapping("/reservation.do")
+		public String reservation1(
+				@RequestParam(value = "table_id") String[] table_id, @RequestParam(value = "time") String[] time,
+				@RequestParam(value = "date") String[] date, @RequestParam(value = "covers") String[] covers,Model model,@RequestParam(value = "id") String[] id) throws SQLException {
+			int user_oid=-500;
+			String resultMessage = "";
+			try {
+				List<Map<String,Integer>> tempUserList = booksysDAO.findUserOiduseUser_id(id[0]);
+				Map<String,Integer> tempMap = tempUserList.get(0);
+				user_oid = tempMap.get("oid");
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				resultMessage = "잘못된 접근입니다.";
+				model.addAttribute("Message", resultMessage);
+				return "reservationResult";
+			}
+			
+			
+			/*
+			 * 타임테이블에 입력한 모든값 넣기
+			 * */
+			for(int i=0;i<date.length;i++)
+			{
+				/*
+				 * 값이 빈거 체크
+				 * */
+				if(covers[i].equals("")||time[i].equals("")||date[i].equals("")||table_id[i].equals(""))
+				{
+					resultMessage = resultMessage+(i+1)+"번째 줄 입력값에 빈칸이 있는 항목은 적용되지 않았습니다.<br>";
+					continue;
+				}
+				Time tempTime = Time.valueOf(time[i]);
+				Date tempDate = Date.valueOf(date[i]);
+				int tempCovers = -500;
+				int temptable_id = -500;
+				/*
+				 * 굳이 없어도 되기는 하는데 숫자값 입력 체크
+				 * */
+				try {
+					tempCovers = Integer.valueOf(covers[i]);
+					temptable_id = Integer.valueOf(table_id[i]);
+				}
+				catch(NumberFormatException e)
+				{
+					resultMessage = resultMessage+(i+1)+"번째 줄 테이블 입력값이 잘못 되었습니다.<br>";
+				}
+				/*
+				 * 성공과 실패 구분
+				 * */
+				int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
+				if(success==1)
+				{
+					resultMessage += date[i]+"일자 " +time[i]+"분 "+table_id[i]+"번 테이블 예약되었습니다.<br>";
+				}
+				else
+				{
+					resultMessage += date[i]+"일자 " +time[i]+"분 "+table_id[i]+" 번 테이블 예약하였습니다.<br>";
+				}
+			}
+			
+			/*
+			 * resultPage로 메시지 넘기고 종료
+			 */
 			model.addAttribute("Message", resultMessage);
 			return "reservationResult";
 		}
-
-		/*
-		 * 타임테이블에 입력한 모든값 넣기
-		 */
-		for (int i = 0; i < date.length; i++) {
-			/*
-			 * 값이 빈거 체크
-			 */
-			if (covers[i].equals("") || time[i].equals("") || date[i].equals("") || table_id[i].equals("")) {
-				resultMessage = resultMessage + (i + 1) + "번째 줄 입력값에 빈칸이 있는 항목은 적용되지 않았습니다.<br>";
-				continue;
-			}
-			Time tempTime = Time.valueOf(time[i]);
-			Date tempDate = Date.valueOf(date[i]);
-			int tempCovers = -500;
-			int temptable_id = -500;
-			/*
-			 * 굳이 없어도 되기는 하는데 숫자값 입력 체크
-			 */
-			try {
-				tempCovers = Integer.valueOf(covers[i]);
-				temptable_id = Integer.valueOf(table_id[i]);
-			} catch (NumberFormatException e) {
-				resultMessage = resultMessage + (i + 1) + "번째 줄 테이블 입력값이 잘못 되었습니다.<br>";
-			}
-			/*
-			 * 성공과 실패 구분
-			 */
-			int success = booksysDAO.addReservation(tempCovers, tempDate, tempTime, temptable_id, user_oid);
-			if (success == 1) {
-				resultMessage += date[i] + "일자 " + time[i] + "분 " + table_id[i] + "번 테이블 예약되었습니다.<br>";
-			} else {
-				resultMessage += date[i] + "일자 " + time[i] + "분 " + table_id[i] + " 번 테이블 예약하였습니다.<br>";
-			}
-		}
-
-		/*
-		 * resultPage로 메시지 넘기고 종료
-		 */
-		model.addAttribute("Message", resultMessage);
-		return "reservationResult";
-	}
-
+	
+	
 }

@@ -6,19 +6,28 @@
 <meta charset="UTF-8">
 <title>회원가입</title>
 <link href="/assets/css/loginStyle.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+function onlyNumber(){
+
+    if((event.keyCode<48)||(event.keyCode>57))
+
+       event.returnValue=false;
+
+}
+</script>
 </head>
 <body>
 	<div class="all">
 		<form action="/register.do" method="post">
-			<input placeholder="아이디" type="text" />
+			<input type="text" placeholder="아이디" name="id"/>
 			<div class="text2">
-				<input placeholder="이름" type="text" />
+				<input type="text" placeholder="이름" name="name"/>
 			</div>
 			<div class="text2">
-				<input placeholder="전화번호" type="text" />
+				<input type="text" maxlength="11" placeholder="전화번호" name="phoneNumber" onkeypress="onlyNumber()"/>
 			</div>
 			<div class="text2">
-				<input placeholder="비밀번호" type="password" />
+				<input type="password" placeholder="비밀번호" name="password"/>
 			</div>
 			<div class="button">
 				<button type='submit'>회원 가입</button>
