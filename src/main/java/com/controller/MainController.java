@@ -292,6 +292,8 @@ public class MainController {
 			return "myReservation";
 		}
 		if(user_oid_my == -500) return "index";
+		
+		resultMessage += user_id+"님의 예약입니다.<br>";
 		List<String> reservationList = booksysDAO.userReservationList(user_oid_my);
 		if(reservationList.isEmpty()) 
 		{
