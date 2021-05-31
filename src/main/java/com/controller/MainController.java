@@ -159,7 +159,7 @@ public class MainController {
 	/*
 	 * 타임 테이블 페이지
 	 */
-
+	@RequestMapping("/timeTable")
 	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {
 		model.addAttribute("id", user.getId());
 		System.out.println(user.getId());

@@ -22,7 +22,7 @@ history.pushState(state, title, url);
 	int startTime = ((Integer)request.getAttribute("startTime")).intValue();
 	int endTime = ((Integer)request.getAttribute("endTime")).intValue();
 	List<String> rStatus = (List<String>)request.getAttribute("reservationStatus");
-	String date = request.getAttribute("date").toString().substring(0,10);
+	String dateNow = request.getAttribute("date").toString().substring(0,10);
 %>
 </head>
 <body>
