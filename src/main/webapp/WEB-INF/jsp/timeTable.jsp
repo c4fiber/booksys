@@ -103,10 +103,8 @@ int endTime = ((Integer) request.getAttribute("endTime")).intValue();
 						</div>
 						<div class='addInput'></div>
 						<button type='button' class='btnAdd'>예약추가</button>
-						<input type="hidden" name="id"
-							value=<%=(String) request.getAttribute("id")%>> <input
-							id='submitReservation' value="등록" type="submit"
-							disabled="disabled" />
+						<input type="hidden" name="id" value=<%=(String) request.getAttribute("id")%>> 
+						<input id='submitReservation' value="등록" type="submit" disabled="disabled" />
 					</form>
 
 					<script type="text/javascript">
