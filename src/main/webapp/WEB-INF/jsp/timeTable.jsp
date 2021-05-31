@@ -21,7 +21,6 @@ history.pushState(state, title, url);
 	int numOfTables = ((Integer)request.getAttribute("numOfTables")).intValue();
 	int startTime = ((Integer)request.getAttribute("startTime")).intValue();
 	int endTime = ((Integer)request.getAttribute("endTime")).intValue();
-	
 %>
 </head>
 <body>

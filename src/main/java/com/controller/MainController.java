@@ -171,10 +171,9 @@ public class MainController {
 			date = today();
 		}
 
-		// table 개수, 입력 날짜, 영업 시작시간, 영업 종료시간
+		// table 개수, 영업 시작시간, 영업 종료시간
 		int numOfTables = booksysDAO.selectNumOfTables();
 		model.addAttribute("numOfTables", numOfTables);
-		model.addAttribute("date", date.toString());
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
 		System.out.println(numOfTables);
@@ -217,13 +216,12 @@ public class MainController {
 			}
 		}
 
-	
-		// table 개수, 입력 날짜, 영업 시작시간, 영업 종료시간
+		// table 개수, 영업 시작시간, 영업 종료시간
 		int numOfTables = booksysDAO.selectNumOfTables();
 		model.addAttribute("numOfTables", numOfTables);
-		model.addAttribute("date", date.toString());
 		model.addAttribute("startTime", this.startTime);
 		model.addAttribute("endTime", this.endTime);
+
 		return "timeTable";
 	}
 
