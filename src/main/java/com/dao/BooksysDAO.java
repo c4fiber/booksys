@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class BooksysDAO {
 	 * 로그인을 체크하는 메소드
 	 * @param id
 	 * @param password
-	 * @return isExist & isTrue ? User : null
+	 * @return 성공(User), 실패(null)
 	 */
 	public User login(String id, String password) {
 		// queryForObject를 사용하면 결과가 0개일때 exception 발생
@@ -70,17 +71,11 @@ public class BooksysDAO {
 	 * covers, date, time, table_id, customer_id, arrivalTime
 	 * @return 전체 예약 리스트(hashMap)
 	 */
-	public List<Map<String, ?>> selectAllReservations() {
-		return jt.query("select * from reservation", (rs, rowNum) -> {
-			Map<String, Object> mss = new HashMap<>();
-			mss.put("covers", rs.getInt(2));
-			mss.put("date", rs.getDate(3));
-			mss.put("time", rs.getTime(4));
-			mss.put("table_id", rs.getInt(5));
-			mss.put("customer_id", rs.getInt(6));
-			mss.put("arrivalTime", rs.getTime(7));
-			return mss;
-		});
+	public List<String> reservationStatus(Date date) {
+		return jt.query("select * from reservation where date=?", (rs, rowNum) -> {
+			
+			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString().substring(0,2) + "/" + rs.getInt(5);
+		}, date);
 	}
   
 	/**
@@ -100,15 +95,10 @@ public class BooksysDAO {
 			return mss;
 		});
 	}
- 	
-	/**
-	 * 예약 추가
-	 * @param covers
-	 * @param date
-	 * @param time
-	 * @param table_id
-	 * @param customer_id
-	 * @return 성공(1), 실패(0)
+
+	/** 
+	 * 예약을 추가하는 메소드
+	 * @return 성공(1) 실패(0)
 	 */
 	public int addReservation(int covers, String date, String time, int table_id, int customer_id) {
 		String sql = "INSERT INTO reservation (covers, date, time, table_id, customer_id) VALUES (?,?,?,?,?)";
@@ -198,5 +188,17 @@ public class BooksysDAO {
 			mss.put("places", rs.getInt(3));
 			return mss;
 		});
+	}
+	
+	/**
+	 * DB에 등록된 Table의 개수를 돌려주는 메소드
+	 * @return
+	 */
+	public int selectNumOfTables() {
+		String sql = "SELECT COUNT(number) FROM `TABLE`";
+
+		int numOfTables = jt.queryForObject(sql, Integer.class);
+		
+		return numOfTables;
 	}
 }
