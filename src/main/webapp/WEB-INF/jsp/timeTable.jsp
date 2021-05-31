@@ -1,6 +1,8 @@
 
-<%@page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page
+	import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 <%@ page import="java.time.*"%>
 <%@ page import="java.sql.Date"%>
@@ -105,12 +107,15 @@ int endTime = ((Integer) request.getAttribute("endTime")).intValue();
 						</div>
 						<div class='addInput'></div>
 						<button type='button' class='btnAdd'>예약추가</button>
-						<input type="hidden" name="id" value=<%=(String) request.getAttribute("id")%>> 
-						<input id='submitReservation' value="등록" type="submit" disabled="disabled" />
+						<input type="hidden" name="id"
+							value=<%=(String) request.getAttribute("id")%>> <input
+							id='submitReservation' value="등록" type="submit"
+							disabled="disabled" />
 					</form>
 
 					<script type="text/javascript">
 						var line = 0;
+
 						$(document)
 								.ready(
 										function() {
@@ -119,10 +124,8 @@ int endTime = ((Integer) request.getAttribute("endTime")).intValue();
 															function() {
 																$('.addInput')
 																		.append(
-																				'<input type="date" name="date" value=""><select name="time"><option value=""></option><option value="16:00:00">16:00:00</option><option value="18:00:00">18:00:00</option><option value="20:00:00">20:00:00</option><option value="22:00:00">22:00:00</option></select><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button id ="deleteButton" type="button" class="btnRemove">예약삭제</button><br>');
-																$(this)
-																		.remove();
-																if ($("button[id=deleteButton]:button").length == 0) {
+																				'<input type="date" name="date" value=""> <select name="time"><option value=""></option><option value="16:00:00">16:00:00</option><option value="18:00:00">18:00:00</option><option value="20:00:00">20:00:00</option><option value="22:00:00">22:00:00</option></select><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button id ="deleteButton" type="button" class="btnRemove">예약삭제</button><br>');
+																if ($("button[id=deleteButton]:button ").length > 0) {
 																	$(
 																			"input[id=submitReservation]:submit")
 																			.attr(
@@ -155,9 +158,16 @@ int endTime = ((Integer) request.getAttribute("endTime")).intValue();
 																							.remove();
 																					$(
 																							this)
-																							.next()
 																							.remove();
+																					if ($("button[id=deleteButton]:button").length == 0) {
+																						$(
+																								"input[id=submitReservation]:submit")
+																								.attr(
+																										"disabled",
+																										true); //보이기
+																					}
 																				});
+
 															});
 										});
 					</script>
