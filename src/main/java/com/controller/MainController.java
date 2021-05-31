@@ -52,11 +52,6 @@ public class MainController {
 	List<Map<String, ?>> cacheR = new ArrayList<Map<String, ?>>();
 
 	/**
-	 * session확보용 객체
-	 */
-	User user = new User("", "anonymous");
-
-	/**
 	 * 식당 운영시간 (default = 16 ~ 24)
 	 */
 	final int startTime = 16;
@@ -83,10 +78,14 @@ public class MainController {
 	 * 메인 페이지
 	 */
 	@RequestMapping("/")
-	public String index(Model model) {
-	
-		model.addAttribute("id", user.getId());
-		model.addAttribute("name", user.getName());
+	public String index(Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("id") == null) {
+			System.out.println("logic ok");
+			session.setAttribute("id", "");
+			session.setAttribute("name", "ANONYMOUS");
+		}
+
 		return "index";
 	}
 
@@ -141,14 +140,14 @@ public class MainController {
 	 */
 	@RequestMapping("/login.do")
 	public String login(@RequestParam(value = "id", defaultValue = "") String id,
-			@RequestParam(value = "password", defaultValue = "") String password, Model model) {
+			@RequestParam(value = "password", defaultValue = "") String password, 
+			Model model, HttpSession session) {
 
-		System.out.println("id&password" + id + password);
 		User result = booksysDAO.login(id, password);
 		if (result != null) {
-			user.setId(result.getId());
-			user.setName(result.getName());
-
+			session.setAttribute("id", result.getId());
+			session.setAttribute("name", result.getName());
+			
 			return "redirect:/";
 		} else {
 			model.addAttribute("failed", "yes");
@@ -161,10 +160,7 @@ public class MainController {
 	 * 타임 테이블 페이지
 	 */
 	@RequestMapping("/timeTable")
-	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {
-		model.addAttribute("id", user.getId());
-		System.out.println(user.getId());
-  
+	public String timeTable(@RequestParam(value = "date", required = false) Date date, Model model) {  
 		// 입력 날짜가 없으면 오늘날짜로 입력(처음 timetable 열람 시)
 		if (date == null) {
 			System.out.println("debug: ok");
@@ -204,7 +200,6 @@ public class MainController {
 	{ 
 		int tableNum = booksysDAO.selectNumOfTables(); // 전체 테이블 개수
   
-		model.addAttribute("id", user.getId());
 		model.addAttribute("superDate",date);
   
 		//((int)((i*100)+16+j)값의 경우 예를 들어 2번테이블 18시일경우 218이 key가 됩니다.
@@ -235,9 +230,7 @@ public class MainController {
 	public String review(Model model) {
 		final int COUNT = 10; // 페이지 당 리뷰 개수
 
-		System.out.println(booksysDAO.selectAllReviews());
 		model.addAttribute("reviews", booksysDAO.selectAllReviews());
-		model.addAttribute("user_id", user.getId());
 
 		return "review";
 	}
@@ -250,23 +243,18 @@ public class MainController {
 	 * @param model
 	 */
 	@RequestMapping("/review.do")
-	public String putComment(@RequestParam(value = "user_id", defaultValue = "") String user_id,
-			@RequestParam(value = "review_content") String comment, Model model) throws SQLException {
-
-		if (user_id.equals("")) {
-			model.addAttribute("result", "id fail");
-
-		} else {
-
-			// string -> date 형변환 -> 데이터 타입 맞추기
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String dateStr = dtf.format(LocalDateTime.now());
-			Date date = Date.valueOf(dateStr);
-
-			if (booksysDAO.addReview(user_id, date, comment) != 1) {
+	public String putComment(@RequestParam(value = "review_content") String comment, Model model, HttpServletRequest request) throws SQLException {
+			HttpSession session = request.getSession();
+			String user_id = (String) session.getAttribute("id");
+			
+			if(user_id.equals("")) {
+				return"redirect:/index";
+			}
+			
+			if (booksysDAO.addReview(user_id, today(), comment) != 1) {
 				model.addAttribute("result", "sql fail");
 			}
-		}
+
 
 		return "redirect:/review";
 	}
