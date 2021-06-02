@@ -75,6 +75,25 @@ public class BooksysDAO {
 			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString().substring(0,2) + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
 		}, user_oid);
 	}
+	
+	
+	/**
+	 * 날짜 시간과 연관된 즉 그시간에 예약하면 충돌하는 예약 보여주는 리스트
+	 * covers, date, time, table_id, customer_id, arrivalTime
+	 * @return 그시간에 예약하면 충돌하는 예약 보여주는 리스트
+	 */
+	public List<String> alreadyReservation(Date date, Time time, int table_id) {
+		int endTimeHours = time.getHours() + 1;
+		Time endTime = new Time(endTimeHours, 0, 0);
+		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + time
+				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
+		return jt.query(SQL, (rs, rowNum) -> {
+			
+			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString() + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
+		});
+	}
+				
+	
 	/**
 	 * 예약 전체 조회
 	 * covers, date, time, table_id, customer_id, arrivalTime
@@ -83,10 +102,10 @@ public class BooksysDAO {
 	public List<String> reservationStatus(Date date) {
 		return jt.query("select * from reservation where date=?", (rs, rowNum) -> {
 			
-			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString().substring(0,2) + "/" + rs.getInt(5);
+			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString() + "/" + rs.getInt(5);
 		}, date);
 	}
-  
+	
 	/**
 	 * 날짜에 따른 예약 조회
 	 * @param date
@@ -123,19 +142,20 @@ public class BooksysDAO {
 	 * @param table_id
 	 * @return 성공(true), 실패(false)
 	 */
-	public boolean nowTableReservationAvailable(Date date,Time time,int table_id)
-	{	
-		//해당 날짜 시간 테이블에 맞는 테이블을 찾아 있으면 false없으면 true (예약가능 반환한다.)
-		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'"
-				+ " AND time=" + "'" + time + "'" + " AND table_id=" + "'" + table_id + "'";
+	public boolean nowTableReservationAvailable(Date date, Time time, int table_id) {
+		int endTimeHours = time.getHours() + 1;
+		Time endTime = new Time(endTimeHours, 0, 0);
+		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + time
+				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		int rowCount = jt.queryForObject(SQL, Integer.class);
-		if(rowCount==0)
-		{
-			return true;	
+		if (rowCount==0) {
+			return true;
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
-
 	/**
 	 *  유저 id로 oid찾기
 	 * @param user_id
