@@ -379,7 +379,8 @@ public class MainController {
 						resultMessage += "예약 실패<br>";
 
 					}
-				} else {
+				} 
+				else {
 					String errorMessage = "불가능한 예약입니다.<br>";
 					model.addAttribute("Message", errorMessage);
 					return "reservationResult";

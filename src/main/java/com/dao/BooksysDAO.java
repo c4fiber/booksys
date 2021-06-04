@@ -83,9 +83,11 @@ public class BooksysDAO {
 	 * @return 그시간에 예약하면 충돌하는 예약 보여주는 리스트
 	 */
 	public List<String> alreadyReservation(Date date, Time time, int table_id) {
+		int startTimeHours = time.getHours() - 1;
+		Time startTime = new Time(startTimeHours, 0, 0);
 		int endTimeHours = time.getHours() + 1;
 		Time endTime = new Time(endTimeHours, 0, 0);
-		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + time
+		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + startTime
 				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		return jt.query(SQL, (rs, rowNum) -> {
 			
@@ -143,9 +145,11 @@ public class BooksysDAO {
 	 * @return 성공(true), 실패(false)
 	 */
 	public boolean nowTableReservationAvailable(Date date, Time time, int table_id) {
+		int startTimeHours = time.getHours() - 1;
+		Time startTime = new Time(startTimeHours, 0, 0);
 		int endTimeHours = time.getHours() + 1;
 		Time endTime = new Time(endTimeHours, 0, 0);
-		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + time
+		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + startTime
 				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		int rowCount = jt.queryForObject(SQL, Integer.class);
 		if (rowCount==0) {
