@@ -72,7 +72,7 @@ public class BooksysDAO {
 	public List<String> userReservationList(int user_oid) {
 		return jt.query("select * from reservation where customer_oid=? and arrivalTime is NULL", (rs, rowNum) -> {
 			
-			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString().substring(0,2) + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
+			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString() + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
 		}, user_oid);
 	}
 	
@@ -84,10 +84,10 @@ public class BooksysDAO {
 	 */
 	public List<String> alreadyReservation(Date date, Time time, int table_id) {
 		int startTimeHours = time.getHours() - 1;
-		Time startTime = new Time(startTimeHours, 0, 0);
+		Time startTime = new Time(startTimeHours, time.getMinutes(), time.getSeconds());
 		int endTimeHours = time.getHours() + 1;
-		Time endTime = new Time(endTimeHours, 0, 0);
-		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + startTime
+		Time endTime = new Time(endTimeHours, time.getMinutes(), time.getSeconds());
+		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
 				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		return jt.query(SQL, (rs, rowNum) -> {
 			
@@ -146,10 +146,10 @@ public class BooksysDAO {
 	 */
 	public boolean nowTableReservationAvailable(Date date, Time time, int table_id) {
 		int startTimeHours = time.getHours() - 1;
-		Time startTime = new Time(startTimeHours, 0, 0);
+		Time startTime = new Time(startTimeHours, time.getMinutes(), time.getSeconds());
 		int endTimeHours = time.getHours() + 1;
-		Time endTime = new Time(endTimeHours, 0, 0);
-		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >=" + "'" + startTime
+		Time endTime = new Time(endTimeHours, time.getMinutes(), time.getSeconds());
+		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
 				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		int rowCount = jt.queryForObject(SQL, Integer.class);
 		if (rowCount==0) {

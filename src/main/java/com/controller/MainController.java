@@ -376,14 +376,13 @@ public class MainController {
 					if (success == 1) {
 						resultMessage += date[i] + "일자 " + time[i] + "분 " + table_id[i] + "번 테이블 예약되었습니다.<br>";
 					} else {
-						resultMessage += "예약 실패<br>";
+						resultMessage += date[i] + "일자 " + time[i] + "분 " + table_id[i] + "번 테이블 예약 실패입니다.<br>";
 
 					}
 				} 
 				else {
-					String errorMessage = "불가능한 예약입니다.<br>";
-					model.addAttribute("Message", errorMessage);
-					return "reservationResult";
+					resultMessage += date[i] + "일자 " + time[i] + "분 " + table_id[i] + "번 테이블 예약 실패입니다.<br>";
+				
 				}
 
 			}
