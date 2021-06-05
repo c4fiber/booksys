@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>test</title>
+<title>예약 확인 페이지</title>
 <meta charset="utf-8" />
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -26,6 +26,10 @@
 			<%
 			String Message = (String) request.getAttribute("Message");
 			out.print(Message);
+			if(Message.equals(""))
+			{
+				out.print("잘못된 요청입니다. 다시 확인해주세요.");
+			}
 			%>
 			<form action="/" method="post">
 				<input type="submit" value="확인" />

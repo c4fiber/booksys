@@ -109,52 +109,82 @@ int endTime = ((Integer) request.getAttribute("endTime")).intValue();
 					</form>
 				</div>
 
-
-<div>
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+				<div>
+					<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 					<form action="reservation.do" method="POST">
 						<div class='temp'>
 							&emsp;&emsp;예약일 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 							예약시간&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 							테이블명&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 인원 <br>
 						</div>
-						
-		<div class='addInput'>
-		</div>
-		<button type='button' class='btnAdd'>예약추가</button>
-		<input type="hidden" name="id" value=<%=(String)request.getAttribute("id") %>>
-		<input id='submitReservation' value="등록" type="submit" disabled="disabled"/>
-	</form>
-	<script type="text/javascript">
-	var line =0;
-	
-	$(document).ready(function(){
-		$('.btnAdd').click (function(){
-			$('.addInput').append(
-			'<input type="date" name="date" value=""><input name="time" placeholder="18:00:00"><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button id ="deleteButton" type="button" class="btnRemove">예약삭제</button><br>');
-			if( $("button[id=deleteButton]:button").length > 0)
-			{
-				$("input[id=submitReservation]:submit").attr("disabled",false); //보이기
-			}
-		$('.btnRemove').on('click',function(){
-			$(this).prev().remove();
-			$(this).prev().remove();
-			$(this).prev().remove();
-			$(this).prev().remove();
-			$(this).prev().remove();
-			$(this).remove();
-			if( $("button[id=deleteButton]:button").length== 0)
-			{
-				$("input[id=submitReservation]:submit").attr("disabled",true); //보이기
-			}
-		});		
-		
-		
-		});
-	});
-	</script>	
-	</div>
-				
+						<div class='addInput'></div>
+						<button type='button' class='btnAdd'>예약추가</button>
+						<input type="hidden" name="id"
+							value=<%=(String) request.getAttribute("id")%>> <input
+							id='submitReservation' value="등록" type="submit"
+							disabled="disabled" />
+					</form>
+
+					<script type="text/javascript">
+						var line = 0;
+
+						$(document)
+								.ready(
+										function() {
+											$('.btnAdd')
+													.click(
+															function() {
+																$('.addInput')
+																		.append(
+																				'<input type="date" name="date" value=""><input name="time" placeholder="18:00:00"><input type="number" name="table_id" value="" min="0"><input type="number" name="covers" value=""min="0">\<button id ="deleteButton" type="button" class="btnRemove">예약삭제</button><br>');
+
+																if ($("button[id=deleteButton]:button ").length > 0) {
+																	$(
+																			"input[id=submitReservation]:submit")
+																			.attr(
+																					"disabled",
+																					false); //보이기
+																}
+																$('.btnRemove')
+																		.on(
+																				'click',
+																				function() {
+																					$(
+																							this)
+																							.prev()
+																							.remove();
+																					$(
+																							this)
+																							.prev()
+																							.remove();
+																					$(
+																							this)
+																							.prev()
+																							.remove();
+																					$(
+																							this)
+																							.prev()
+																							.remove();
+																					$(
+																							this)
+																							.prev()
+																							.remove();
+																					$(
+																							this)
+																							.remove();
+																					if ($("button[id=deleteButton]:button").length == 0) {
+																						$(
+																								"input[id=submitReservation]:submit")
+																								.attr(
+																										"disabled",
+																										true); //보이기
+																					}
+																				});
+
+															});
+										});
+					</script>
+				</div>
 			</section>
 		</div>
 	</div>

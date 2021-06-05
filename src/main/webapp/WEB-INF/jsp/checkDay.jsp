@@ -6,6 +6,7 @@
 <%@ page import="java.time.*"%>
 <%@ page import="java.sql.Date"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
 <script>
 	var state = null;
 	var title = '나의 예약';
-	var url = '/myReservation';
+	var url = '/checkDay';
 	history.pushState(state, title, url);
 </script>
 <meta charset="UTF-8">
@@ -43,18 +44,24 @@
 		<!-- Main -->
 		<div id="main">
 			<div class="item">
-					<%
-					String Message = (String) request.getAttribute("Message");
-					out.print(Message);
-					%>
-					<div class="centered">
-					<form action="/" method="post">
-						<input type="submit" value="확인" />
-					</form>
-					
-				</div>
+				<%
+				ArrayList<String> temp = (ArrayList<String>) request.getAttribute("Message");
+
+				if (temp == null) {
+					out.print("충돌되는 예약이 없습니다!");
+				} else {
+					for (String st : temp) {
+						out.print(st + "<br>");
+					}
+				}
+				%>
+				<form action="/" method="post">
+					<input type="submit" value="확인" />
+				</form>
+
 			</div>
 		</div>
+	</div>
 
 
 	</div>
@@ -63,6 +70,7 @@
 
 </body>
 </html>
+
 
 
 
