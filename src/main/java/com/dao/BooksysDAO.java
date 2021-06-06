@@ -100,6 +100,7 @@ public class BooksysDAO {
 			SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
 					+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
 		}
+
 		return jt.query(SQL, (rs, rowNum) -> {
 			
 			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString() + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
