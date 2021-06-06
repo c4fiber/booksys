@@ -87,8 +87,20 @@ public class BooksysDAO {
 		Time startTime = new Time(startTimeHours, time.getMinutes(), time.getSeconds());
 		int endTimeHours = time.getHours() + 1;
 		Time endTime = new Time(endTimeHours, time.getMinutes(), time.getSeconds());
-		String SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
-				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
+		
+		Time nightTime = new Time((int) (23), 00, 00);
+		String SQL ="";
+		if(nightTime.equals(time))
+		{
+			SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time =" + "'" + time
+					+"'"+" AND table_id=" + "'" + table_id + "'";
+		}
+		else
+		{
+			SQL = "SELECT * from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
+					+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
+		}
+
 		return jt.query(SQL, (rs, rowNum) -> {
 			
 			return rs.getDate(3).toString() + "/" + rs.getTime(4).toString() + "/" + rs.getInt(5)+"번 테이블 예약이 있습니다.";
@@ -149,9 +161,24 @@ public class BooksysDAO {
 		Time startTime = new Time(startTimeHours, time.getMinutes(), time.getSeconds());
 		int endTimeHours = time.getHours() + 1;
 		Time endTime = new Time(endTimeHours, time.getMinutes(), time.getSeconds());
-		String SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
-				+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
+
+		Time nightTime = new Time((int) (23), 00, 00);
+		String SQL ="";
+		if(nightTime.equals(time))
+		{
+			SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time =" + "'" + time
+					+"'"+" AND table_id=" + "'" + table_id + "'";
+		}
+		else
+		{
+			SQL = "SELECT count(*) from reservation WHERE date=" + "'" + date + "'" + " AND time >" + "'" + startTime
+					+ "'" + " AND time <" + "'" + endTime + "'" + " AND table_id=" + "'" + table_id + "'";
+		}
 		int rowCount = jt.queryForObject(SQL, Integer.class);
+		if(time.getHours()==23 && (time.getMinutes()>0 ||time.getSeconds()>0) )
+		{
+			return false;
+		}
 		if (rowCount==0) {
 			return true;
 		}

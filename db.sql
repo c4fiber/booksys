@@ -39,6 +39,7 @@ CREATE TABLE Reservation (
        customer_oid  int NOT NULL,
        arrivalTime  TIME,
        UNIQUE(date, time, table_id)
+       alter table reservation add constraint foreign key (table_id) references `table`(number)
 ) ;
 
 
